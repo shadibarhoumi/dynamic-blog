@@ -72,8 +72,8 @@ app.use(function(err, req, res, next) {
 });
 
 
-mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/posts');
-console.log('trying to connect to mongodb:', process.env.MONGOLAB_URI)
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/posts');
+console.log('trying to connect to mongodb:', process.env.MONGODB_URI)
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
