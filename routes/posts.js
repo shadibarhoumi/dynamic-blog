@@ -2,23 +2,17 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var timestamps = require('mongoose-timestamp');
-var expressJwt = require('express-jwt');
 
 
 var postSchema = mongoose.Schema({
   title: String,
   categories: [String],
   content: String,
-  authorName: String,
-  authorUsername: String,
-  authorId: String
 });
 
 postSchema.plugin(timestamps);
 
 var Post = mongoose.model('Post', postSchema);
-
-
 
 router.get('/posts', function(req, res, next) {
   Post
@@ -45,14 +39,14 @@ router.get('/posts', function(req, res, next) {
 
 });
 
-router.post('/posts', expressJwt({secret: process.env.JWT_SECRET}), function(req, res, next) {
+router.post('/posts', function(req, res, next) {
   var body = req.body;
   var title = body.title;
   var categories = body.categories;
   var content = body.content;
 
   //simulate error if title, categories and content are all "test"
-  //This is demo field-validation error upon submission. 
+  //This is demo field-validation error upon submission.
   if (title === 'test' && categories === 'test' && content === 'test') {
     return res.status(403).json({
       title: 'Title Error',
@@ -72,10 +66,6 @@ router.post('/posts', expressJwt({secret: process.env.JWT_SECRET}), function(req
     title: title,
     categories: categories.split(','),
     content: content,
-    authorName: req.user ? req.user.name : null,
-    authorUsername: req.user ? req.user.username : null,
-    authorId: req.user ? req.user._id : null,
-    authorImage: req.user ? req.user.image: null
   });
 
 
@@ -107,7 +97,7 @@ router.get('/posts/:id', function(req, res, next) {
   });
 });
 
-router.delete('/posts/:id', expressJwt({secret: process.env.JWT_SECRET}), function(req, res, next) {
+router.delete('/posts/:id', function(req, res, next) {
   var id = req.params.id;
   if (id.length != 24) {
     return res.json({

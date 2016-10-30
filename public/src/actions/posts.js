@@ -90,13 +90,12 @@ export function resetPostFields() {
 };
 
 
-export function createPost(props, tokenFromStorage) {
+export function createPost(props) {
   //const request = axios.post(`${ROOT_URL}/posts`, props);
   const request = axios({
     method: 'post',
     data: props,
     url: `${ROOT_URL}/posts`,
-   headers: {'Authorization': `Bearer ${tokenFromStorage}`}
   });
 
   return {
@@ -161,11 +160,10 @@ export function resetActivePost() {
   }
 };
 
-export function deletePost(id, tokenFromStorage) {
+export function deletePost(id) {
   const request = axios({
     method: 'delete',
     url: `${ROOT_URL}/posts/${id}`,
-   headers: {'Authorization': `Bearer ${tokenFromStorage}`}
   });
   return {
     type: DELETE_POST,

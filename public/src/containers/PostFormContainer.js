@@ -51,26 +51,20 @@ const asyncValidate = (values, dispatch) => {
 const validateAndCreatePost = (values, dispatch) => {
 
   return new Promise((resolve, reject) => {
-
-
-    let token = sessionStorage.getItem('jwtToken');
-    if (!token || token === '') { //if there is no token, dont bother,
-      let data = {data: {message: 'Please Sign In'}};//axios like error
-      dispatch(createPostFailure(data)); // but let other comps know
-      reject(data); //this is for redux-form itself
-      return;
-    }
-    dispatch(createPost(values, token))
+    dispatch(createPost(values))
       .then((response) => {
+        console.log('response', response)
         let data = response.payload.data;
-        //if any one of these exist, then there is a field error 
+        //if any one of these exist, then there is a field error
         if (response.payload.status != 200) {
           //let other components know of error by updating the redux` state
           dispatch(createPostFailure(response.payload));
           reject(data); //this is for redux-form itself
+          console.log('create post failure')
         } else {
           //let other components know that everything is fine by updating the redux` state
           dispatch(createPostSuccess(response.payload));
+          console.log('create post success');
           resolve(); //this is for redux-form itself
         }
       });
