@@ -69,7 +69,7 @@
 	
 	var _routes2 = _interopRequireDefault(_routes);
 	
-	var _configureStore = __webpack_require__(326);
+	var _configureStore = __webpack_require__(330);
 	
 	var _configureStore2 = _interopRequireDefault(_configureStore);
 	
@@ -27087,6 +27087,10 @@
 	
 	var _PostsShow2 = _interopRequireDefault(_PostsShow);
 	
+	var _ImagesIndex = __webpack_require__(326);
+	
+	var _ImagesIndex2 = _interopRequireDefault(_ImagesIndex);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = _react2.default.createElement(
@@ -27094,7 +27098,8 @@
 	  { path: '/', component: _App2.default },
 	  _react2.default.createElement(_reactRouter.IndexRoute, { component: _PostsIndex2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: 'posts/new', component: _PostsNew2.default }),
-	  _react2.default.createElement(_reactRouter.Route, { path: 'posts/:id', component: _PostsShow2.default })
+	  _react2.default.createElement(_reactRouter.Route, { path: 'posts/:id', component: _PostsShow2.default }),
+	  _react2.default.createElement(_reactRouter.Route, { path: 'images', component: _ImagesIndex2.default })
 	);
 
 /***/ },
@@ -32560,17 +32565,273 @@
 /* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _ImagesListContainer = __webpack_require__(327);
+	
+	var _ImagesListContainer2 = _interopRequireDefault(_ImagesListContainer);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ImagesIndex = function (_Component) {
+	  _inherits(ImagesIndex, _Component);
+	
+	  function ImagesIndex() {
+	    _classCallCheck(this, ImagesIndex);
+	
+	    return _possibleConstructorReturn(this, (ImagesIndex.__proto__ || Object.getPrototypeOf(ImagesIndex)).apply(this, arguments));
+	  }
+	
+	  _createClass(ImagesIndex, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(_ImagesListContainer2.default, null);
+	    }
+	  }]);
+	
+	  return ImagesIndex;
+	}(_react.Component);
+	
+	exports.default = ImagesIndex;
+
+/***/ },
+/* 327 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _reactRedux = __webpack_require__(160);
+	
+	var _images = __webpack_require__(328);
+	
+	var _ImagesList = __webpack_require__(329);
+	
+	var _ImagesList2 = _interopRequireDefault(_ImagesList);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    imagesList: state.images.imagesList
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    fetchImages: function fetchImages() {
+	      dispatch((0, _images.fetchImages)()).then(function (response) {
+	        !response.error ? dispatch((0, _images.fetchImagesSuccess)(response.payload)) : dispatch((0, _images.fetchImagesFailure)(response.payload));
+	      });
+	    }
+	  };
+	};
+	
+	var ImagesListContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_ImagesList2.default);
+	
+	exports.default = ImagesListContainer;
+
+/***/ },
+/* 328 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.FETCH_IMAGES_FAILURE = exports.FETCH_IMAGES_SUCCESS = exports.FETCH_IMAGES = undefined;
+	exports.fetchImages = fetchImages;
+	exports.fetchImagesSuccess = fetchImagesSuccess;
+	exports.fetchImagesFailure = fetchImagesFailure;
+	
+	var _axios = __webpack_require__(256);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var FETCH_IMAGES = exports.FETCH_IMAGES = 'FETCH_IMAGES';
+	var FETCH_IMAGES_SUCCESS = exports.FETCH_IMAGES_SUCCESS = 'FETCH_IMAGES_SUCCESS';
+	var FETCH_IMAGES_FAILURE = exports.FETCH_IMAGES_FAILURE = 'FETCH_IMAGES_FAILURE';
+	
+	var ROOT_URL = location.href.indexOf('localhost') > 0 ? 'http://localhost:3000/api' : '/api';
+	
+	function fetchImages() {
+	  var request = (0, _axios2.default)({
+	    method: 'get',
+	    url: ROOT_URL + '/images',
+	    headers: []
+	  });
+	
+	  return {
+	    type: FETCH_IMAGES,
+	    payload: request
+	  };
+	}
+	
+	function fetchImagesSuccess(images) {
+	  return {
+	    type: FETCH_IMAGES_SUCCESS,
+	    payload: images
+	  };
+	}
+	
+	function fetchImagesFailure(error) {
+	  return {
+	    type: FETCH_IMAGES_FAILURE,
+	    payload: error
+	  };
+	}
+
+/***/ },
+/* 329 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ImagesList = function (_Component) {
+	  _inherits(ImagesList, _Component);
+	
+	  function ImagesList() {
+	    _classCallCheck(this, ImagesList);
+	
+	    return _possibleConstructorReturn(this, (ImagesList.__proto__ || Object.getPrototypeOf(ImagesList)).apply(this, arguments));
+	  }
+	
+	  _createClass(ImagesList, [{
+	    key: "componentWillMount",
+	    value: function componentWillMount() {
+	      this.props.fetchImages();
+	    }
+	  }, {
+	    key: "renderImages",
+	    value: function renderImages(images) {
+	      // return <div><pre>{JSON.stringify(images, null, 2)}</pre></div>;
+	      return images.map(function (image) {
+	        return _react2.default.createElement(
+	          "div",
+	          null,
+	          _react2.default.createElement(
+	            "div",
+	            null,
+	            _react2.default.createElement("img", { src: image.url })
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            null,
+	            image.title
+	          )
+	        );
+	      });
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      var _props$imagesList = this.props.imagesList,
+	          images = _props$imagesList.images,
+	          loading = _props$imagesList.loading,
+	          error = _props$imagesList.error;
+	
+	      console.log(loading);
+	      if (loading) {
+	        return _react2.default.createElement(
+	          "div",
+	          { className: "container" },
+	          _react2.default.createElement(
+	            "h1",
+	            null,
+	            "Images"
+	          ),
+	          _react2.default.createElement(
+	            "h3",
+	            null,
+	            "Loading..."
+	          )
+	        );
+	      } else if (error) {
+	        return _react2.default.createElement(
+	          "div",
+	          { className: "alert alert-danger" },
+	          "Error: ",
+	          error.message
+	        );
+	      }
+	
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "container" },
+	        _react2.default.createElement(
+	          "h1",
+	          null,
+	          "Images"
+	        ),
+	        _react2.default.createElement(
+	          "ul",
+	          { className: "list-group" },
+	          this.renderImages(images)
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return ImagesList;
+	}(_react.Component);
+	
+	exports.default = ImagesList;
+
+/***/ },
+/* 330 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
 	if (process.env.NODE_ENV === 'production' || location && location.hostname !== 'localhost') {
-	  module.exports = __webpack_require__(327);
+	  module.exports = __webpack_require__(331);
 	} else {
-	  module.exports = __webpack_require__(337);
+	  module.exports = __webpack_require__(342);
 	}
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 327 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32582,11 +32843,11 @@
 	
 	var _redux = __webpack_require__(167);
 	
-	var _reducers = __webpack_require__(328);
+	var _reducers = __webpack_require__(332);
 	
 	var _reducers2 = _interopRequireDefault(_reducers);
 	
-	var _reduxPromise = __webpack_require__(330);
+	var _reduxPromise = __webpack_require__(335);
 	
 	var _reduxPromise2 = _interopRequireDefault(_reduxPromise);
 	
@@ -32602,7 +32863,7 @@
 	};
 
 /***/ },
-/* 328 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32613,9 +32874,13 @@
 	
 	var _redux = __webpack_require__(167);
 	
-	var _reducer_posts = __webpack_require__(329);
+	var _reducer_posts = __webpack_require__(333);
 	
 	var _reducer_posts2 = _interopRequireDefault(_reducer_posts);
+	
+	var _reducer_images = __webpack_require__(334);
+	
+	var _reducer_images2 = _interopRequireDefault(_reducer_images);
 	
 	var _reduxForm = __webpack_require__(279);
 	
@@ -32623,13 +32888,14 @@
 	
 	var rootReducer = (0, _redux.combineReducers)({
 	  posts: _reducer_posts2.default,
+	  images: _reducer_images2.default,
 	  form: _reduxForm.reducer
 	});
 	
 	exports.default = rootReducer;
 
 /***/ },
-/* 329 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32736,7 +33002,69 @@
 	};
 
 /***/ },
-/* 330 */
+/* 334 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	exports.default = function () {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL_STATE;
+	  var action = arguments[1];
+	
+	  var error = void 0;
+	  switch (action.type) {
+	
+	    case _images.FETCH_IMAGES:
+	      // start fetching images and set loading = true
+	      return _extends({}, state, {
+	        imagesList: {
+	          images: [],
+	          loading: true,
+	          error: null
+	        }
+	      });
+	    case _images.FETCH_IMAGES_SUCCESS:
+	      // return images and make loading = false
+	      return _extends({}, state, {
+	        imagesList: {
+	          images: action.payload.data,
+	          loading: false,
+	          error: null
+	        }
+	      });
+	    case _images.FETCH_IMAGES_FAILURE:
+	      // set error and loading = false
+	      error = action.payload.data || { message: action.payload.message };
+	      return _extends({}, state, {
+	        imagesList: {
+	          images: [],
+	          loading: false,
+	          error: error
+	        }
+	      });
+	    default:
+	      return state;
+	  }
+	};
+	
+	var _images = __webpack_require__(328);
+	
+	var INITIAL_STATE = {
+	  imagesList: {
+	    images: [],
+	    loading: false,
+	    error: null
+	  }
+	};
+
+/***/ },
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32747,7 +33075,7 @@
 	
 	exports['default'] = promiseMiddleware;
 	
-	var _fluxStandardAction = __webpack_require__(331);
+	var _fluxStandardAction = __webpack_require__(336);
 	
 	function isPromise(val) {
 	  return val && typeof val.then === 'function';
@@ -32774,7 +33102,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 331 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32785,7 +33113,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _lodashIsplainobject = __webpack_require__(332);
+	var _lodashIsplainobject = __webpack_require__(337);
 	
 	var _lodashIsplainobject2 = _interopRequireDefault(_lodashIsplainobject);
 	
@@ -32804,7 +33132,7 @@
 	}
 
 /***/ },
-/* 332 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32815,9 +33143,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseFor = __webpack_require__(333),
-	    isArguments = __webpack_require__(334),
-	    keysIn = __webpack_require__(335);
+	var baseFor = __webpack_require__(338),
+	    isArguments = __webpack_require__(339),
+	    keysIn = __webpack_require__(340);
 	
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -32913,7 +33241,7 @@
 
 
 /***/ },
-/* 333 */
+/* 338 */
 /***/ function(module, exports) {
 
 	/**
@@ -32967,7 +33295,7 @@
 
 
 /***/ },
-/* 334 */
+/* 339 */
 /***/ function(module, exports) {
 
 	/**
@@ -33202,7 +33530,7 @@
 
 
 /***/ },
-/* 335 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33213,8 +33541,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var isArguments = __webpack_require__(334),
-	    isArray = __webpack_require__(336);
+	var isArguments = __webpack_require__(339),
+	    isArray = __webpack_require__(341);
 	
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -33340,7 +33668,7 @@
 
 
 /***/ },
-/* 336 */
+/* 341 */
 /***/ function(module, exports) {
 
 	/**
@@ -33526,7 +33854,7 @@
 
 
 /***/ },
-/* 337 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33538,11 +33866,11 @@
 	
 	var _redux = __webpack_require__(167);
 	
-	var _reduxPromise = __webpack_require__(330);
+	var _reduxPromise = __webpack_require__(335);
 	
 	var _reduxPromise2 = _interopRequireDefault(_reduxPromise);
 	
-	var _reducers = __webpack_require__(328);
+	var _reducers = __webpack_require__(332);
 	
 	var _reducers2 = _interopRequireDefault(_reducers);
 	
