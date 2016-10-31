@@ -6,22 +6,28 @@ class ImagesList extends Component {
   }
 
   renderImages(images) {
-    // return <div><pre>{JSON.stringify(images, null, 2)}</pre></div>;
-    return images.map(image =>
-      <div>
-        <div>
-          <img src={image.url} />
-        </div>
-        <div>
-          {image.title}
-        </div>
-      </div>
-    );
+    var imageList = <ol>
+      {images.map(image =>
+        <li key={image._id}>
+          <div>
+            <img src={image.url_m} />
+          </div>
+          <div>
+            {image.title}
+          </div>
+        </li>
+      )}
+    </ol>
+
+    return <div>
+      {imageList}
+      <h2>Raw Data</h2>
+      <div><pre>{JSON.stringify(images, null, 2)}</pre></div>
+    </div>
   }
 
   render() {
     const { images, loading, error } = this.props.imagesList;
-    console.log(loading)
     if (loading) {
       return <div className="container"><h1>Images</h1><h3>Loading...</h3></div>
     } else if (error) {

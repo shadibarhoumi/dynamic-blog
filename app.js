@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var router = express.Router();
+var flickrAPI = require('./api/flickr')
 
 //routes
 var postsRouter = require('./routes/posts');
@@ -76,13 +77,16 @@ app.use(function(err, req, res, next) {
 });
 
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/posts');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/dynamic-blog');
+console.log('mongodb uri', process.env.MONGODB_URI);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log('DB connected!');
 });
 
+// pull in public Flickr data
+// flickrAPI.ingestData();
 
 
 module.exports = app;
