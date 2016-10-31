@@ -42,7 +42,7 @@ app.use(express.static(staticPath));
 app.use('/', express.static(staticPath));
 app.use('/posts/*', express.static(staticPath));
 app.use('/new/*', express.static(staticPath));
-app.use('/fetch', express.static(staticPath));
+app.use('/images', express.static(staticPath));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
