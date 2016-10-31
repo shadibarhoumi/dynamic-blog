@@ -13,7 +13,6 @@ var http = require('http');
  */
 
 var port = normalizePort(process.env.PORT || '3000');
-console.log('using port: ', port)
 app.set('port', port);
 
 /**
@@ -55,7 +54,6 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  console.log('error listening on port')
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -84,7 +82,6 @@ function onError(error) {
  */
 
 function onListening() {
-  console.log('listening')
   var addr = server.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr

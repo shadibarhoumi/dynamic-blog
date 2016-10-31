@@ -1,5 +1,5 @@
 var express = require('express');
-var router = express.Router();
+var postsRouter = express.Router();
 var mongoose = require('mongoose');
 var timestamps = require('mongoose-timestamp');
 
@@ -14,7 +14,7 @@ postSchema.plugin(timestamps);
 
 var Post = mongoose.model('Post', postSchema);
 
-router.get('/posts', function(req, res, next) {
+postsRouter.get('/', function(req, res, next) {
   Post
     .find({})
     .select({
@@ -39,7 +39,7 @@ router.get('/posts', function(req, res, next) {
 
 });
 
-router.post('/posts', function(req, res, next) {
+postsRouter.post('/', function(req, res, next) {
   var body = req.body;
   var title = body.title;
   var categories = body.categories;
@@ -80,7 +80,7 @@ router.post('/posts', function(req, res, next) {
   });
 });
 
-router.get('/posts/:id', function(req, res, next) {
+postsRouter.get('/:id', function(req, res, next) {
   Post.findById({
     '_id': req.params.id
   }, function(err, post) {
@@ -97,7 +97,7 @@ router.get('/posts/:id', function(req, res, next) {
   });
 });
 
-router.delete('/posts/:id', function(req, res, next) {
+postsRouter.delete('/:id', function(req, res, next) {
   var id = req.params.id;
   if (id.length != 24) {
     return res.json({
@@ -119,7 +119,7 @@ router.delete('/posts/:id', function(req, res, next) {
   });
 });
 
-router.post('/posts/validate/fields', function(req, res, next) {
+postsRouter.post('/validate/fields', function(req, res, next) {
   var body = req.body;
   var title = body.title ? body.title.trim() : '';
 
@@ -144,4 +144,4 @@ router.post('/posts/validate/fields', function(req, res, next) {
 });
 
 
-module.exports = router;
+module.exports = postsRouter;
