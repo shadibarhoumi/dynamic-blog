@@ -6,7 +6,8 @@
     "start": "node ./bin/www",
     "start:dev": "nodemon ./bin/www",
     "build": "node node_modules/.bin/webpack",
-    "dev": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js"
+    "dev": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "clear": "mongo dynamic-blog --eval \"db.dropDatabase()\""
   },
   "engines": {
     "node": "5.2.0",
@@ -33,6 +34,7 @@
     "jade": "~1.11.0",
     "jsonwebtoken": "^5.7.0",
     "lodash": "^3.10.1",
+    "moment": "^2.15.2",
     "mongoose": "^4.4.6",
     "mongoose-timestamp": "^0.5.0",
     "morgan": "~1.6.1",

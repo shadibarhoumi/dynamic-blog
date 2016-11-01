@@ -5,13 +5,15 @@ import App from './pages/App';
 import PostsIndex from './pages/PostsIndex';
 import PostsNew from './pages/PostsNew';
 import PostsShow from './pages/PostsShow';
-import ImagesIndex from './pages/ImagesIndex';
+import PhotosIndex from './pages/PhotosIndex';
+import DayShow from './pages/DayShow';
 
 export default (
   <Route path="/" component={App}>
     <IndexRoute component={PostsIndex} />
     <Route path="posts/new" component={PostsNew} />
     <Route path="posts/:id" component={PostsShow} />
-    <Route path="images" component={ImagesIndex} />
+    <Route path="photos" component={PhotosIndex} />
+    <Route path="day/:dateString" component={DayShow} />
   </Route>
 );

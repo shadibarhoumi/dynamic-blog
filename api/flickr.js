@@ -1,6 +1,7 @@
 var request = require('request');
 var parser = require('xml2json');
 var mongoose = require('mongoose');
+var moment = require('moment');
 var Photo = require('../models/Photo');
 
 var getPublicPhotos = function(callback) {
@@ -28,8 +29,8 @@ var ingestData = function() {
         id: photo.id,
         title: photo.title,
         description: typeof photo.description === "object" ? '' : photo.description,
-        lastUpdate: photo.lastupdate,
-        dateTaken: photo.datetaken,
+        lastUpdate: new Date(),
+        dateTaken: moment(photo.datetaken).toDate(),
         tags: photo.tags,
         url_m: photo.url_m
       });

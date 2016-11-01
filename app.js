@@ -11,6 +11,7 @@ var flickrAPI = require('./api/flickr')
 //routes
 var postsRouter = require('./routes/posts');
 var imagesRouter = require('./routes/images')
+var dayRouter = require('./routes/day')
 
 var app = express();
 
@@ -38,6 +39,7 @@ app.use(cookieParser());
 
 app.use('/api/posts/', postsRouter);
 app.use('/api/images/', imagesRouter);
+app.use('/api/day/', dayRouter);
 
 app.use(express.static(staticPath));
 app.use('/', express.static(staticPath));
@@ -52,14 +54,6 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-
-// app.use(function(err, req, res, next) {
-//   console.error(err.stack);
-//   console.log(1)
-//   res.status(500).send('Uh oh! Something broke!');
-// });
-
-
 // error handlers
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
@@ -70,7 +64,7 @@ app.use(function(err, req, res, next) {
     res.json({error: 'Internal Server Error'});
   }
   else if(err.status === 404) {
-    res.render('error');    //render error page
+    res.render('error'); // render error page
   } else {
     res.json({error: err.message})
   }
@@ -78,7 +72,6 @@ app.use(function(err, req, res, next) {
 
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/dynamic-blog');
-console.log('mongodb uri', process.env.MONGODB_URI);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {

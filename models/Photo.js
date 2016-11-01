@@ -4,8 +4,8 @@ var photoSchema = mongoose.Schema({
   flickrId: String,
   title: String,
   description: String,
-  lastUpdate: String,
-  dateTaken: String,
+  lastUpdate: Date,
+  dateTaken: Date,
   tags: String,
   url_m: String,
 });
