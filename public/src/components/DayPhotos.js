@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import moment from 'moment'
 import Video from 'react-html5video'
 
+import 'react-html5video/dist/ReactHtml5Video.css'
+import styles from './DayPhotos.css'
+
 class DayPhotos extends Component {
   constructor(props) {
     super(props)
@@ -36,11 +39,15 @@ class DayPhotos extends Component {
         } else if (image.media === 'video') {
           return <li key={image._id}>
             <div>
-              <Video controls autoPlay loop>
+              <Video
+                controls autoPlay loop muted
+                className={styles.video}
+                width='500'
+              >
                 <source src={image.videoUrl} type='video/mp4' />
               </Video>
             </div>
-            <div>
+            <div className={styles.blue}>
               {moment(image.dateTaken).format('dddd, MMMM Do YYYY, h:mma')}
             </div>
             <div>
@@ -71,9 +78,9 @@ class DayPhotos extends Component {
     }
 
     return (
-      <div className="container">
-        <h1>Images for {moment(this.props.dateString, 'MM-DD-YYYY').format('dddd, MMMM Do YYYY')}</h1>
-        <ul className="list-group">
+      <div className='container'>
+        <h1 className={styles.blue}>Images for {moment(this.props.dateString, 'MM-DD-YYYY').format('dddd, MMMM Do YYYY')}</h1>
+        <ul className='list-group'>
           {this.renderImages(images)}
         </ul>
       </div>
