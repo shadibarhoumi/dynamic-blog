@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import moment from 'moment'
+import Video from 'react-html5video'
 
 class DayPhotos extends Component {
   constructor(props) {
@@ -18,20 +19,37 @@ class DayPhotos extends Component {
 
   renderImages(images) {
     var imageList = <ol>
-      {images.map(image =>
-        <li key={image._id}>
-          <div>
-            <img src={image.url_m} />
-          </div>
-          <div>
-            {image.dateTaken}
-            {/*moment(image.dateTaken).format('dddd, MMMM Do YYYY, h:mma')*/}
-          </div>
-          <div>
-            {image.title}
-          </div>
-        </li>
-      )}
+      {images.map(image => {
+        if (image.media === 'photo') {
+          return <li key={image._id}>
+            <div>
+              <img src={image.url_m} />
+            </div>
+            <div>
+              {moment(image.dateTaken).format('dddd, MMMM Do YYYY, h:mma')}
+            </div>
+            <div>
+              <b>{image.media}</b>
+              {image.title}
+            </div>
+          </li>
+        } else if (image.media === 'video') {
+          return <li key={image._id}>
+            <div>
+              <Video controls autoPlay loop>
+                <source src={image.videoUrl} type='video/mp4' />
+              </Video>
+            </div>
+            <div>
+              {moment(image.dateTaken).format('dddd, MMMM Do YYYY, h:mma')}
+            </div>
+            <div>
+              <b>{image.media}</b>
+              {image.title}
+            </div>
+          </li>
+        }
+      })}
     </ol>
 
     return <div>

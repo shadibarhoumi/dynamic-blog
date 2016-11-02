@@ -79,7 +79,7 @@ db.once('open', function() {
 });
 
 // pull in public Flickr data
-// flickrAPI.ingestData();
+flickrAPI.ingestDataIfNecessary();
 
 
 module.exports = app;

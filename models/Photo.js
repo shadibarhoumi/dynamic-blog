@@ -6,8 +6,11 @@ var photoSchema = mongoose.Schema({
   description: String,
   lastUpdate: Date,
   dateTaken: Date,
+  media: String,
   tags: String,
   url_m: String,
+  secret: String,
+  videoUrl: String,
 });
 
 var Photo = mongoose.model('Photo', photoSchema);
