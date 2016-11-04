@@ -6,21 +6,22 @@ import { Link } from 'react-router'
 import 'react-html5video/dist/ReactHtml5Video.css'
 import styles from './DayPhotos.css'
 
-class DayPhotos extends Component {
+class TagView extends Component {
   constructor(props) {
     super(props)
-    this.state = { validUrl: true }
   }
 
   componentWillMount() {
-    const { dateString } = this.props
-    const validUrl = moment(dateString, 'MM-DD-YYYY').isValid()
-
-    this.setState({ validUrl })
-
-    if (validUrl) this.props.fetchImages(dateString)
     this.props.fetchTags()
+    this.props.fetchImagesForTag(this.props.tagName)
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.tagName !== this.props.tagName) {
+      this.props.fetchImagesForTag(nextProps.tagName)
+    }
+  }
+
 
   renderImageList(images) {
     var imageList = <ol>
@@ -79,7 +80,7 @@ class DayPhotos extends Component {
 
     return (
       <div className='container'>
-        <h1 className={styles.blue}>Images for {moment(this.props.dateString, 'MM-DD-YYYY').format('dddd, MMMM Do YYYY')}</h1>
+        <h1 className={styles.blue}>Images for #{this.props.tagName}</h1>
         {this.renderImageList(images)}
       </div>
     )
@@ -109,7 +110,6 @@ class DayPhotos extends Component {
   }
 
   render() {
-    if (!this.state.validUrl) return <div className="alert alert-danger">Invalid Date!</div>
     return <div>
       {this.renderTags()}
       {this.renderImages()}
@@ -118,4 +118,4 @@ class DayPhotos extends Component {
 }
 
 
-export default DayPhotos
+export default TagView

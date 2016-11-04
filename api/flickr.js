@@ -25,6 +25,11 @@ var getPublicPhotos = function(callback) {
   })
 }
 
+var extractTags = function(title) {
+  var tags = title.match(/#[A-Za-z0-9]+/g)
+  return tags === null ? [] : tags
+}
+
 var ingestData = function() {
   getPublicPhotos(function(photoData) {
     photoData.rsp.photos.photo.forEach(function(photo) {
@@ -35,9 +40,9 @@ var ingestData = function() {
         lastUpdate: moment(photo.lastupdate, 'x').toDate(),
         dateTaken: moment(photo.datetaken).toDate(),
         media: photo.media,
-        tags: photo.tags,
+        tags: extractTags(photo.title),
+        flickrTags: photo.tags,
         url_m: photo.url_m,
-        secret: photo.secret,
         videoUrl: photo.media === 'video' ? generateVideoUrl(photo.id, photo.secret) : null
       })
 
@@ -61,6 +66,10 @@ var ingestDataIfNecessary = function() {
       console.log(`Database contains ${count} photos, not ingesting data.`)
     }
   })
+}
+
+var fetchPhotos = function() {
+  console.log('fetching photos')
 }
 
 module.exports = {

@@ -1,5 +1,5 @@
 var express = require('express');
-var flickrAPI = require('../api/flickr');
+var flickrApi = require('../api/flickr');
 
 var dayRouter = express.Router();
 

@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
 import {
-  fetchImages, fetchImagesSuccess, fetchImagesFailure,
+  fetchImagesForTag, fetchImagesSuccess, fetchImagesFailure,
   fetchTags, fetchTagsSuccess, fetchTagsFailure,
 } from '../actions/images';
 
-import DayPhotos from '../components/DayPhotos';
+import TagView from '../components/TagView';
 
 
 const mapStateToProps = (state) => {
@@ -16,8 +16,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchImages: (dateString) => {
-      dispatch(fetchImages(dateString))
+    fetchImagesForTag: (tagName) => {
+      dispatch(fetchImagesForTag(tagName))
       .then((response) => {
           !response.error ? dispatch(fetchImagesSuccess(response.payload)) : dispatch(fetchImagesFailure(response.payload));
         });
@@ -32,6 +32,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-const DayPhotosContainer = connect(mapStateToProps, mapDispatchToProps)(DayPhotos)
+const TagViewContainer = connect(mapStateToProps, mapDispatchToProps)(TagView)
 
-export default DayPhotosContainer
+export default TagViewContainer

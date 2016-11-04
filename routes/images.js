@@ -1,7 +1,7 @@
 var express = require('express')
 var request = require('request')
 var parser = require('xml2json')
-var flickrAPI = require('../api/flickr')
+var flickrApi = require('../api/flickr')
 var Photo = require('../models/Photo')
 var moment = require('moment')
 
