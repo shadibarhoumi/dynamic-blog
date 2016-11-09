@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
-import PostsReducer from './reducer_posts';
-import ImagesReducer from './reducer_images';
+import PostsReducer from './postsReducer';
+import PhotosReducer from './photosReducer';
 import { reducer as formReducer } from 'redux-form';
 
 const rootReducer = combineReducers({
   posts: PostsReducer,
-  images: ImagesReducer,
+  photos: PhotosReducer,
   form: formReducer,
 });
 

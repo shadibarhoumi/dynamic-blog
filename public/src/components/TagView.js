@@ -13,49 +13,49 @@ class TagView extends Component {
 
   componentWillMount() {
     this.props.fetchTags()
-    this.props.fetchImagesForTag(this.props.tagName)
+    this.props.fetchPhotosForTag(this.props.tagName)
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.tagName !== this.props.tagName) {
-      this.props.fetchImagesForTag(nextProps.tagName)
+      this.props.fetchPhotosForTag(nextProps.tagName)
     }
   }
 
 
-  renderImageList(images) {
-    var imageList = <ol>
-      {images.map(image => {
-        if (image.media === 'photo') {
-          return <li key={image._id}>
+  renderPhotoList(photos) {
+    var photoList = <ol>
+      {photos.map(photo => {
+        if (photo.media === 'photo') {
+          return <li key={photo._id}>
             <div>
-              <img src={image.url_m} />
+              <img src={photo.url_m} />
             </div>
             <div>
-              {moment(image.dateTaken).format('dddd, MMMM Do YYYY, h:mma')}
+              {moment(photo.dateTaken).format('dddd, MMMM Do YYYY, h:mma')}
             </div>
             <div>
-              <b>{image.media}</b>
-              {image.title}
+              <b>{photo.media}</b>
+              {photo.title}
             </div>
           </li>
-        } else if (image.media === 'video') {
-          return <li key={image._id}>
+        } else if (photo.media === 'video') {
+          return <li key={photo._id}>
             <div>
               <Video
                 controls autoPlay loop muted
                 className={styles.video}
                 width='500'
               >
-                <source src={image.videoUrl} type='video/mp4' />
+                <source src={photo.videoUrl} type='video/mp4' />
               </Video>
             </div>
             <div className={styles.blue}>
-              {moment(image.dateTaken).format('dddd, MMMM Do YYYY, h:mma')}
+              {moment(photo.dateTaken).format('dddd, MMMM Do YYYY, h:mma')}
             </div>
             <div>
-              <b>{image.media}</b>
-              {image.title}
+              <b>{photo.media}</b>
+              {photo.title}
             </div>
           </li>
         }
@@ -63,25 +63,25 @@ class TagView extends Component {
     </ol>
 
     return <div>
-      {imageList}
+      {photoList}
       <h2>Raw Data</h2>
-      <div><pre>{JSON.stringify(images, null, 2)}</pre></div>
+      <div><pre>{JSON.stringify(photos, null, 2)}</pre></div>
     </div>
   }
 
-  renderImages() {
-    const { images, imagesLoading, imagesError } = this.props.imagesList
+  renderPhotos() {
+    const { photos, photosLoading, photosError } = this.props.photosList
 
-    if (imagesLoading) {
-      return <div className="container"><h1>Images</h1><h3>Loading...</h3></div>
-    } else if (imagesError) {
-      return <div className="alert alert-danger">Error: {imagesError.message}</div>
+    if (photosLoading) {
+      return <div className="container"><h1>Photos</h1><h3>Loading...</h3></div>
+    } else if (photosError) {
+      return <div className="alert alert-danger">Error: {photosError.message}</div>
     }
 
     return (
       <div className='container'>
-        <h1 className={styles.blue}>Images for #{this.props.tagName}</h1>
-        {this.renderImageList(images)}
+        <h1 className={styles.blue}>Photos for #{this.props.tagName}</h1>
+        {this.renderPhotoList(photos)}
       </div>
     )
   }
@@ -112,7 +112,7 @@ class TagView extends Component {
   render() {
     return <div>
       {this.renderTags()}
-      {this.renderImages()}
+      {this.renderPhotos()}
     </div>
   }
 }

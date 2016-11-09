@@ -1,44 +1,44 @@
 import React, { Component } from 'react';
 
-class ImagesList extends Component {
+class PhotosList extends Component {
   componentWillMount() {
-    this.props.fetchImages();
+    this.props.fetchPhotos();
   }
 
-  renderImages(images) {
-    var imageList = <ol>
-      {images.map(image =>
-        <li key={image._id}>
+  renderPhotos(photos) {
+    var photoList = <ol>
+      {photos.map(photo =>
+        <li key={photo._id}>
           <div>
-            <img src={image.url_m} />
+            <img src={photo.url_m} />
           </div>
           <div>
-            {image.title}
+            {photo.title}
           </div>
         </li>
       )}
     </ol>
 
     return <div>
-      {imageList}
+      {photoList}
       <h2>Raw Data</h2>
-      <div><pre>{JSON.stringify(images, null, 2)}</pre></div>
+      <div><pre>{JSON.stringify(photos, null, 2)}</pre></div>
     </div>
   }
 
   render() {
-    const { images, loading, error } = this.props.imagesList;
+    const { photos, loading, error } = this.props.photosList;
     if (loading) {
-      return <div className="container"><h1>Images</h1><h3>Loading...</h3></div>
+      return <div className="container"><h1>Photos</h1><h3>Loading...</h3></div>
     } else if (error) {
       return <div className="alert alert-danger">Error: {error.message}</div>
     }
 
     return (
       <div className="container">
-        <h1>Images</h1>
+        <h1>Photos</h1>
         <ul className="list-group">
-          {this.renderImages(images)}
+          {this.renderPhotos(photos)}
         </ul>
       </div>
     );
@@ -46,4 +46,4 @@ class ImagesList extends Component {
 }
 
 
-export default ImagesList;
+export default PhotosList;

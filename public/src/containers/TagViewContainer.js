@@ -1,25 +1,25 @@
 import { connect } from 'react-redux'
 import {
-  fetchImagesForTag, fetchImagesSuccess, fetchImagesFailure,
+  fetchPhotosForTag, fetchPhotosSuccess, fetchPhotosFailure,
   fetchTags, fetchTagsSuccess, fetchTagsFailure,
-} from '../actions/images';
+} from '../actions/photos';
 
 import TagView from '../components/TagView';
 
 
 const mapStateToProps = (state) => {
   return {
-    imagesList: state.images.imagesList,
-    tagsList: state.images.tagsList
+    photosList: state.photos.photosList,
+    tagsList: state.photos.tagsList
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchImagesForTag: (tagName) => {
-      dispatch(fetchImagesForTag(tagName))
+    fetchPhotosForTag: (tagName) => {
+      dispatch(fetchPhotosForTag(tagName))
       .then((response) => {
-          !response.error ? dispatch(fetchImagesSuccess(response.payload)) : dispatch(fetchImagesFailure(response.payload));
+          !response.error ? dispatch(fetchPhotosSuccess(response.payload)) : dispatch(fetchPhotosFailure(response.payload));
         });
     },
     fetchTags: () => {

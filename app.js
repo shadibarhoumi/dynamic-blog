@@ -11,7 +11,7 @@ var appConstants = require('./appConstants')
 
 //routes
 var postsRouter = require('./routes/posts')
-var imagesRouter = require('./routes/images')
+var photosRouter = require('./routes/photos')
 var tagsRouter = require('./routes/tags')
 var dayRouter = require('./routes/day')
 
@@ -40,7 +40,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 
 app.use('/api/posts/', postsRouter)
-app.use('/api/images/', imagesRouter)
+app.use('/api/photos/', photosRouter)
 app.use('/api/day/', dayRouter)
 app.use('/api/tags/', tagsRouter)
 
@@ -48,7 +48,7 @@ app.use(express.static(staticPath))
 app.use('/', express.static(staticPath))
 app.use('/posts/*', express.static(staticPath))
 app.use('/new/*', express.static(staticPath))
-app.use('/images', express.static(staticPath))
+app.use('/photos', express.static(staticPath))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

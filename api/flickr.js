@@ -20,8 +20,8 @@ var getPublicPhotos = function(callback) {
     }
   },
   function (error, response, body) {
-    var imageData = parser.toJson(body, { object: true })
-    callback(imageData)
+    var photoData = parser.toJson(body, { object: true })
+    callback(photoData)
   })
 }
 
