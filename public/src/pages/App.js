@@ -1,13 +1,13 @@
-import React from 'react';
-import { Component } from 'react';
-import AppContainer from '../containers/AppContainer';
+import React from 'react'
+import { Component } from 'react'
+import AppComponent from '../components/App'
 
 export default class App extends Component {
   render() {
     return (
-    	<AppContainer>
+    	<AppComponent>
     	 {this.props.children}
-    	</AppContainer>
-    );
+    	</AppComponent>
+    )
   }
 }

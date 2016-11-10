@@ -1,13 +1,19 @@
 import axios from 'axios'
-import * as consts from '../constants/photosConstants'
+import { types } from '../constants/PhotoConstants'
 
 const ROOT_URL = location.href.indexOf('localhost') > 0 ? 'http://localhost:3000/api' : '/api'
 
-export const fetchPhotosWithDate = (dateString) => async (dispatch) => {
-  dispatch({
-    type: consts.FETCH_PHOTOS
+export const fetchMostRecentPhotos = () => async (dispatch) => {
+  const response = await axios({
+    method: 'get',
+    url: `${ROOT_URL}/photos/`,
+    headers: []
   })
 
+  dispatch(setPhotos(response.data))
+}
+
+export const fetchPhotosWithDate = (dateString) => async (dispatch) => {
   const response = await axios({
     method: 'get',
     url: `${ROOT_URL}/photos/${dateString}`,
@@ -19,10 +25,6 @@ export const fetchPhotosWithDate = (dateString) => async (dispatch) => {
 
 
 export const fetchPhotosWithTag = (tagName) => {
-  dispatch({
-    type: consts.FETCH_PHOTOS
-  })
-
   const response = axios({
     method: 'get',
     url: `${ROOT_URL}/tags/${tagName}`,
@@ -33,10 +35,6 @@ export const fetchPhotosWithTag = (tagName) => {
 }
 
 export const fetchTags = () => {
-  dispatch({
-    type: consts.FETCH_TAGS
-  })
-
   const response = axios({
     method: 'get',
     url: `${ROOT_URL}/tags/`,
@@ -48,14 +46,14 @@ export const fetchTags = () => {
 
 const setPhotos = (photos) => {
   return {
-    type: consts.SET_PHOTOS,
+    type: types.SET_PHOTOS,
     photos
   }
 }
 
 const setTags = (tags) => {
   return {
-    type: consts.SET_TAGS,
+    type: types.SET_TAGS,
     tags
   }
 }

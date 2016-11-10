@@ -1,52 +1,13 @@
-import * as consts from '../constants/photosConstants'
+import { types } from '../constants/PhotoConstants'
 
-const initialState = {
-  photosList: {
-    photos: [],
-    loading: false,
-  },
-  tagsList: {
-    tags: [],
-    loading: false,
-  }
+const handlers = {}
+
+handlers[types.SET_PHOTOS] = (state, action) => {
+  return state.set('photos', action.photos)
 }
 
-export default (state = initialState, action) => {
-  switch(action.type) {
-
-  case consts.FETCH_PHOTOS:
-    return {
-      ...state,
-      photosList: {
-        photos: [],
-        loading: true,
-      },
-    }
-  case consts.SET_PHOTOS:
-    return {
-      ...state,
-      photosList: {
-        photos: action.photos,
-        loading: false,
-      },
-    }
-  case consts.FETCH_TAGS:
-    return {
-      ...state,
-      tagsList: {
-        tags: [],
-        loading: true,
-      },
-    }
-  case consts.SET_TAGS:
-    return {
-      ...state,
-      tagsList: {
-        tags: action.tags,
-        loading: false,
-      },
-    }
-  default:
-    return state
-  }
+handlers[types.SET_TAGS] = (state, action) => {
+  return state.set('tags', action.tags)
 }
+
+export default handlers

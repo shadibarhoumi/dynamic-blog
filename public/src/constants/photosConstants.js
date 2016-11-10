@@ -1,7 +1,0 @@
-export const FETCH_PHOTOS = 'FETCH_PHOTOS'
-export const SET_PHOTOS = 'SET_PHOTOS'
-export const FETCH_PHOTOS_FAILURE = 'FETCH_PHOTOS_FAILURE'
-
-export const FETCH_TAGS = 'FETCH_TAGS'
-export const SET_TAGS = 'SET_TAGS'
-export const FETCH_TAGS_FAILURE = 'FETCH_TAGS_FAILURE'
