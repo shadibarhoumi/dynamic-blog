@@ -6,7 +6,7 @@ const ROOT_URL = location.href.indexOf('localhost') > 0 ? 'http://localhost:3000
 export const fetchMostRecentPhotos = () => async (dispatch) => {
   const response = await axios({
     method: 'get',
-    url: `${ROOT_URL}/photos/`,
+    url: `${ROOT_URL}/photos/feed`,
     headers: []
   })
 
@@ -16,7 +16,7 @@ export const fetchMostRecentPhotos = () => async (dispatch) => {
 export const fetchPhotosWithDate = (dateString) => async (dispatch) => {
   const response = await axios({
     method: 'get',
-    url: `${ROOT_URL}/photos/${dateString}`,
+    url: `${ROOT_URL}/photos/date/${dateString}`,
     headers: []
   })
 

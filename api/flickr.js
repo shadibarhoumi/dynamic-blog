@@ -39,6 +39,7 @@ var ingestData = function() {
         description: typeof photo.description === 'object' ? '' : photo.description,
         lastUpdate: moment(photo.lastupdate, 'x').toDate(),
         dateTaken: moment(photo.datetaken).toDate(),
+        dateStart: moment(photo.datetaken).startOf('day').toDate(),
         media: photo.media,
         tags: extractTags(photo.title),
         flickrTags: photo.tags,
@@ -66,10 +67,6 @@ var ingestDataIfNecessary = function() {
       console.log(`Database contains ${count} photos, not ingesting data.`)
     }
   })
-}
-
-var fetchPhotos = function() {
-  console.log('fetching photos')
 }
 
 module.exports = {

@@ -14,7 +14,7 @@ photosRouter.get('/', function(req, res, next) {
   })
 })
 
-photosRouter.get('/:dateString', function(req, res, next) {
+photosRouter.get('/date/:dateString', function(req, res, next) {
   var dayStart = moment(req.params.dateString, 'MM-DD-YYYY')
   var dayEnd = moment(dayStart).add(1, 'days')
 
@@ -26,6 +26,24 @@ photosRouter.get('/:dateString', function(req, res, next) {
   })
   .exec(function(err, photos) {
     res.json(photos)
+  })
+})
+
+photosRouter.get('/feed', function(req, res, next) {
+  Photo.aggregate([
+    { $group: {
+        _id: '$dateStart',
+        photos: {
+          $push: '$$ROOT'
+        }
+      }
+    },
+    { $sort: {
+        _id: -1
+      }
+    },
+  ], function (err, result) {
+    res.json(result)
   })
 })
 

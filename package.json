@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "start:dev": "nodemon ./bin/www",
     "build": "node node_modules/.bin/webpack",
-    "dev": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot",
+    "dev": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "clear": "mongo dynamic-blog --eval \"db.dropDatabase()\""
   },
   "engines": {
@@ -28,6 +28,7 @@
     "babel-preset-stage-0": "^6.16.0",
     "bcrypt": "^0.8.5",
     "body-parser": "~1.13.2",
+    "classnames": "^2.2.5",
     "cookie-parser": "~1.3.5",
     "css-loader": "^0.25.0",
     "debug": "~2.2.0",
