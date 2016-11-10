@@ -10,7 +10,6 @@ var flickrApi = require('./api/flickr')
 var appConstants = require('./appConstants')
 
 //routes
-var postsRouter = require('./routes/posts')
 var photosRouter = require('./routes/photos')
 var tagsRouter = require('./routes/tags')
 var dayRouter = require('./routes/day')
@@ -32,23 +31,23 @@ app.use(function(req, res, next) {
   next()
 })
 
-var staticPath = 'public'
+
 
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 
-app.use('/api/posts/', postsRouter)
 app.use('/api/photos/', photosRouter)
 app.use('/api/day/', dayRouter)
 app.use('/api/tags/', tagsRouter)
 
+var staticPath = 'public'
 app.use(express.static(staticPath))
 app.use('/', express.static(staticPath))
-app.use('/posts/*', express.static(staticPath))
-app.use('/new/*', express.static(staticPath))
-app.use('/photos', express.static(staticPath))
+app.use('/feed', express.static(staticPath))
+app.use('/tags', express.static(staticPath))
+app.use('/about', express.static(staticPath))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
