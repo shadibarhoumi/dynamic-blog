@@ -29,6 +29,31 @@ photosRouter.get('/date/:dateString', function(req, res, next) {
   })
 })
 
+photosRouter.get('/byTag', function(req, res, next) {
+  Photo.aggregate([
+    { '$unwind': '$tags' },
+    { '$group': {
+      '_id': '$tags',
+      'count': { '$sum': 1 },
+      'photos': {
+        '$push': '$$ROOT'
+      }
+    }},
+    { '$sort': { 'count': -1 }}
+  ], function (err, result) {
+    res.json(result)
+  })
+})
+
+photosRouter.get('/tags/:tag', function(req, res, next) {
+  Photo.find({
+    tags: req.params.tag
+  })
+  .exec(function(err, photos) {
+    res.json(photos)
+  })
+})
+
 photosRouter.get('/feed', function(req, res, next) {
   Photo.aggregate([
     { $group: {

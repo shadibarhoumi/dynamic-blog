@@ -4,7 +4,9 @@ import photosReducer from './photosReducer'
 
 const initialState = Map({
   photos: [],
-  tags: []
+  photosByDate: {},
+  photosByTag: {},
+  tags: [],
 })
 
 const allReducer = {

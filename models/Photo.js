@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
 
 var photoSchema = mongoose.Schema({
   flickrId: String,
@@ -12,8 +12,8 @@ var photoSchema = mongoose.Schema({
   url_m: String,
   secret: String,
   videoUrl: String,
-});
+})
 
-var Photo = mongoose.model('Photo', photoSchema);
+var Photo = mongoose.model('Photo', photoSchema)
 
-module.exports = Photo;
+module.exports = Photo

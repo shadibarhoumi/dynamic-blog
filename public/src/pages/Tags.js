@@ -1,9 +1,51 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { Link } from 'react-router'
+
+import PhotoSection from '../components/PhotoSection'
+import * as PhotoActions from '../actions/PhotoActions'
 
 class Tags extends Component {
+  componentWillMount() {
+    // this.props.fetchTags()
+    this.props.fetchPhotosByTag()
+  }
+
   render() {
-    return <h1>Tags</h1>
+    return <div>
+      <h1>Tags</h1>
+      <ul>
+        {this.props.tags.map(tagData => {
+          const { tag, count } = tagData
+          return <li key={tag}>
+            <Link to={'/tags/' + tag}>
+              {'#' + tag}
+            </Link>
+            <span> {count}</span>
+          </li>
+        })}
+      </ul>
+
+      {Object.keys(this.props.photosByTag).map(tag => {
+        const tagData = this.props.photosByTag[tag]
+        console.log('photos', tagData.photos)
+        return <PhotoSection
+          header={'#' + tag}
+          photos={tagData.photos}
+        />
+      })}
+    </div>
   }
 }
 
-export default Tags
+const mapStateToProps = (state) => {
+  return {
+    photosByTag: state.get('photosByTag'),
+    tags: state.get('tags')
+  }
+}
+
+const mapDispatchToProps = (dispatch) => bindActionCreators(PhotoActions, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tags)

@@ -24,6 +24,7 @@ class PhotoBlockItem extends Component {
       <Caption
         dateTaken={photo.dateTaken}
         title={photo.title}
+        tags={photo.tags}
       />
     </div>
   }

@@ -13,12 +13,12 @@ class TagView extends Component {
 
   componentWillMount() {
     this.props.fetchTags()
-    this.props.fetchPhotosForTag(this.props.tagName)
+    this.props.fetchPhotosForTag(this.props.tag)
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.tagName !== this.props.tagName) {
-      this.props.fetchPhotosForTag(nextProps.tagName)
+    if (nextProps.tag !== this.props.tag) {
+      this.props.fetchPhotosForTag(nextProps.tag)
     }
   }
 
@@ -80,7 +80,7 @@ class TagView extends Component {
 
     return (
       <div className='container'>
-        <h1 className={styles.blue}>Photos for #{this.props.tagName}</h1>
+        <h1 className={styles.blue}>Photos for #{this.props.tag}</h1>
         {this.renderPhotoList(photos)}
       </div>
     )

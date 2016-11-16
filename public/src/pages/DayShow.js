@@ -6,9 +6,9 @@ import moment from 'moment'
 import * as PhotoActions from '../actions/PhotoActions'
 import PhotoBlock from '../components/PhotoBlock'
 
-class Feed extends Component {
+class DayShow extends Component {
   componentWillMount() {
-    this.props.fetchMostRecentPhotos()
+    this.props.fetchPhotosWithDate(this.props.params.dateString)
   }
 
   componentWillUnmount() {
@@ -17,25 +17,20 @@ class Feed extends Component {
 
   render() {
     return <div>
-      <h1>Feed</h1>
-      {this.props.photosByDate.map(date => {
-        return <div key={date._id}>
-          <h2>{moment(date._id).format('dddd, MMMM Do')}</h2>
-          <PhotoBlock
-            photos={date.photos}
-          />
-        </div>
-      })}
+      <h1>Photos taken on {moment(this.props.params.dateString, 'MM-DD-YYYY').format('dddd, MMMM Do YYYY')}</h1>
+      <PhotoBlock
+        photos={this.props.photos}
+      />
     </div>
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    photosByDate: state.get('photos')
+    photos: state.get('photos')
   }
 }
 
 const mapDispatchToProps = (dispatch) => bindActionCreators(PhotoActions, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(Feed)
+export default connect(mapStateToProps, mapDispatchToProps)(DayShow)

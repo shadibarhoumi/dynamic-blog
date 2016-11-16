@@ -27,7 +27,7 @@ var getPublicPhotos = function(callback) {
 
 var extractTags = function(title) {
   var tags = title.match(/#[A-Za-z0-9]+/g)
-  return tags === null ? [] : tags
+  return tags === null ? [] : tags.map(tag => tag.substring(1))
 }
 
 var ingestData = function() {

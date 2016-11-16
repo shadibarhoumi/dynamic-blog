@@ -10,9 +10,8 @@ var flickrApi = require('./api/flickr')
 var appConstants = require('./appConstants')
 
 //routes
-var photosRouter = require('./routes/photos')
-var tagsRouter = require('./routes/tags')
-var dayRouter = require('./routes/day')
+var photosRouter = require('./routes/photosRouter')
+var tagsRouter = require('./routes/tagsRouter')
 
 var app = express()
 
@@ -39,7 +38,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 
 app.use('/api/photos/', photosRouter)
-app.use('/api/day/', dayRouter)
 app.use('/api/tags/', tagsRouter)
 
 var staticPath = 'public'

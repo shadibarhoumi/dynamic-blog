@@ -24,24 +24,41 @@ export const fetchPhotosWithDate = (dateString) => async (dispatch) => {
 }
 
 
-export const fetchPhotosWithTag = (tagName) => {
-  const response = axios({
+export const fetchPhotosWithTag = (tag) => async (dispatch) => {
+  const response = await axios({
     method: 'get',
-    url: `${ROOT_URL}/tags/${tagName}`,
+    url: `${ROOT_URL}/photos/tags/${tag}`,
+    headers: []
+  })
+}
+
+export const fetchPhotosByTag = () => async (dispatch) => {
+  const response = await axios({
+    method: 'get',
+    url: `${ROOT_URL}/photos/byTag`,
     headers: []
   })
 
-  dispatch(setPhotos(response.data))
+  console.log('photosByTag', response.data)
+  dispatch(setPhotosByTag(response.data))
+  dispatch(setTags(response.data))
 }
 
-export const fetchTags = () => {
-  const response = axios({
+export const fetchTags = () => async (dispatch) => {
+  const response = await axios({
     method: 'get',
     url: `${ROOT_URL}/tags/`,
     headers: []
   })
 
+  console.log('data', response.data)
   dispatch(setTags(response.data))
+}
+
+export const resetPhotos = () => {
+  return {
+    type: types.RESET_PHOTOS
+  }
 }
 
 const setPhotos = (photos) => {
@@ -51,9 +68,16 @@ const setPhotos = (photos) => {
   }
 }
 
-const setTags = (tags) => {
+const setPhotosByTag = (photosByTag) => {
+  return {
+    type: types.SET_PHOTOS_BY_TAG,
+    photosByTag
+  }
+}
+
+const setTags = (photosByTag) => {
   return {
     type: types.SET_TAGS,
-    tags
+    photosByTag
   }
 }
