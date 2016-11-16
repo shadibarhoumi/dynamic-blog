@@ -9,12 +9,12 @@ import PhotoBlock from '../components/PhotoBlock'
 class TagShow extends Component {
   componentWillMount() {
     this.fullTag = '#' + this.props.params.tag
-    this.props.fetchPhotosWithTag(this.props.params.tag)
+    this.props.fetchPhotosForTag(this.props.params.tag)
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.params.tag !== this.props.params.tag) {
-      this.props.fetchPhotosWithTag(nextProps.params.tag)
+      this.props.fetchPhotosForTag(nextProps.params.tag)
       this.fullTag = '#' + nextProps.params.tag
     }
   }
@@ -35,7 +35,7 @@ class TagShow extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    photos: state.getIn('photos')
+    photos: state.get('photos')
   }
 }
 

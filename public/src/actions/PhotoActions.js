@@ -3,17 +3,17 @@ import { types } from '../constants/PhotoConstants'
 
 const ROOT_URL = location.href.indexOf('localhost') > 0 ? 'http://localhost:3000/api' : '/api'
 
-export const fetchMostRecentPhotos = () => async (dispatch) => {
+export const fetchPhotosByDate = () => async (dispatch) => {
   const response = await axios({
     method: 'get',
-    url: `${ROOT_URL}/photos/feed`,
+    url: `${ROOT_URL}/photos/byDate`,
     headers: []
   })
 
-  dispatch(setPhotos(response.data))
+  dispatch(setPhotosByDate(response.data))
 }
 
-export const fetchPhotosWithDate = (dateString) => async (dispatch) => {
+export const fetchPhotosForDate = (dateString) => async (dispatch) => {
   const response = await axios({
     method: 'get',
     url: `${ROOT_URL}/photos/date/${dateString}`,
@@ -23,15 +23,6 @@ export const fetchPhotosWithDate = (dateString) => async (dispatch) => {
   dispatch(setPhotos(response.data))
 }
 
-
-export const fetchPhotosWithTag = (tag) => async (dispatch) => {
-  const response = await axios({
-    method: 'get',
-    url: `${ROOT_URL}/photos/tags/${tag}`,
-    headers: []
-  })
-}
-
 export const fetchPhotosByTag = () => async (dispatch) => {
   const response = await axios({
     method: 'get',
@@ -39,20 +30,18 @@ export const fetchPhotosByTag = () => async (dispatch) => {
     headers: []
   })
 
-  console.log('photosByTag', response.data)
   dispatch(setPhotosByTag(response.data))
   dispatch(setTags(response.data))
 }
 
-export const fetchTags = () => async (dispatch) => {
+export const fetchPhotosForTag = (tag) => async (dispatch) => {
   const response = await axios({
     method: 'get',
-    url: `${ROOT_URL}/tags/`,
+    url: `${ROOT_URL}/photos/tags/${tag}`,
     headers: []
   })
 
-  console.log('data', response.data)
-  dispatch(setTags(response.data))
+  dispatch(setPhotos(response.data))
 }
 
 export const resetPhotos = () => {
@@ -61,17 +50,24 @@ export const resetPhotos = () => {
   }
 }
 
-const setPhotos = (photos) => {
-  return {
-    type: types.SET_PHOTOS,
-    photos
-  }
-}
-
 const setPhotosByTag = (photosByTag) => {
   return {
     type: types.SET_PHOTOS_BY_TAG,
     photosByTag
+  }
+}
+
+const setPhotosByDate = (photosByDate) => {
+  return {
+    type: types.SET_PHOTOS_BY_DATE,
+    photosByDate
+  }
+}
+
+const setPhotos = (photos) => {
+  return {
+    type: types.SET_PHOTOS,
+    photos
   }
 }
 

@@ -8,7 +8,6 @@ import * as PhotoActions from '../actions/PhotoActions'
 
 class Tags extends Component {
   componentWillMount() {
-    // this.props.fetchTags()
     this.props.fetchPhotosByTag()
   }
 
@@ -29,9 +28,10 @@ class Tags extends Component {
 
       {Object.keys(this.props.photosByTag).map(tag => {
         const tagData = this.props.photosByTag[tag]
-        console.log('photos', tagData.photos)
         return <PhotoSection
+          key={tag}
           header={'#' + tag}
+          count={tagData.count}
           photos={tagData.photos}
         />
       })}

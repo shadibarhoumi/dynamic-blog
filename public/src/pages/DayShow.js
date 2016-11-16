@@ -5,10 +5,22 @@ import moment from 'moment'
 
 import * as PhotoActions from '../actions/PhotoActions'
 import PhotoBlock from '../components/PhotoBlock'
+import { dateFormatter } from '../helpers/PhotoHelpers'
 
 class DayShow extends Component {
+
   componentWillMount() {
-    this.props.fetchPhotosWithDate(this.props.params.dateString)
+    this.dateString = this.props.params.dateString
+    this.formattedDate = dateFormatter.formatDateFromSlug(this.dateString)
+    this.props.fetchPhotosForDate(this.dateString)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.params.dateString !== this.props.params.dateString) {
+      const nextDateString = nextProps.params.dateString
+      this.formattedDate = dateFormatter.formatDateFromSlug(nextDateString)
+      this.props.fetchPhotosForDate(nextDateString)
+    }
   }
 
   componentWillUnmount() {
@@ -17,7 +29,7 @@ class DayShow extends Component {
 
   render() {
     return <div>
-      <h1>Photos taken on {moment(this.props.params.dateString, 'MM-DD-YYYY').format('dddd, MMMM Do YYYY')}</h1>
+      <h1>Photos taken on {this.formattedDate}</h1>
       <PhotoBlock
         photos={this.props.photos}
       />

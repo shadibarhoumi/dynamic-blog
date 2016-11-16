@@ -3,9 +3,9 @@ import { Map } from 'immutable'
 import photosReducer from './photosReducer'
 
 const initialState = Map({
-  photos: [],
   photosByDate: {},
   photosByTag: {},
+  photos: [],
   tags: [],
 })
 

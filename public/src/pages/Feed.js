@@ -3,12 +3,14 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
+import { dateFormatter } from '../helpers/PhotoHelpers'
+
 import * as PhotoActions from '../actions/PhotoActions'
-import PhotoBlock from '../components/PhotoBlock'
+import PhotoSection from '../components/PhotoSection'
 
 class Feed extends Component {
   componentWillMount() {
-    this.props.fetchMostRecentPhotos()
+    this.props.fetchPhotosByDate()
   }
 
   componentWillUnmount() {
@@ -18,13 +20,13 @@ class Feed extends Component {
   render() {
     return <div>
       <h1>Feed</h1>
-      {this.props.photosByDate.map(date => {
-        return <div key={date._id}>
-          <h2>{moment(date._id).format('dddd, MMMM Do')}</h2>
-          <PhotoBlock
-            photos={date.photos}
-          />
-        </div>
+      {Object.keys(this.props.photosByDate).map(date => {
+        const dateData = this.props.photosByDate[date]
+        return <PhotoSection
+          key={date}
+          header={dateFormatter.formatDate(date)}
+          photos={dateData.photos}
+        />
       })}
     </div>
   }
@@ -32,7 +34,7 @@ class Feed extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    photosByDate: state.get('photos')
+    photosByDate: state.get('photosByDate')
   }
 }
 

@@ -11,11 +11,22 @@ handlers[types.SET_PHOTOS_BY_TAG] = (state, action) => {
   action.photosByTag.forEach(tagData => {
     const tag = tagData._id
     photosByTag[tag] = {
-      tag,
+      count: tagData.count,
       photos: tagData.photos
     }
   })
   return state.set('photosByTag', photosByTag)
+}
+
+handlers[types.SET_PHOTOS_BY_DATE] = (state, action) => {
+  const photosByDate = {}
+  action.photosByDate.forEach(dateData => {
+    const dateString = dateData._id
+    photosByDate[dateString] = {
+      photos: dateData.photos
+    }
+  })
+  return state.set('photosByDate', photosByDate)
 }
 
 handlers[types.SET_TAGS] = (state, action) => {

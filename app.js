@@ -30,8 +30,6 @@ app.use(function(req, res, next) {
   next()
 })
 
-
-
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -70,7 +68,6 @@ app.use(function(err, req, res, next) {
   }
 })
 
-
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/dynamic-blog')
 var db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
@@ -81,6 +78,5 @@ db.once('open', function() {
 flickrApi.ingestDataIfNecessary()
 // pull in public Flickr data
 // setInterval(flickrApi.fetchPhotos, appConstants.FLICKR_FETCH_INTERVAL)
-
 
 module.exports = app
