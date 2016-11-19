@@ -25,6 +25,8 @@ var generateVideoUrl = function(flickrId, secret) {
 
 // insert Photo into DB
 var insertPhoto = function(photo) {
+  console.log('inserting photo', photo)
+  // console.log('inserting photo with title:', photo.title)
   var photoRecord = new Photo({
     flickrId: photo.id,
     title: photo.title,
@@ -110,12 +112,19 @@ var fetchPage = function(pageSize, page) {
     // print total pages if we're on first page
     if (page === 1) console.log('Total pages: ' + totalPages)
 
+    console.log(photoData.rsp.photos.photo)
+
     var newPhotos = 0
     // insert all photos
-    photoData.rsp.photos.photo.forEach(function(photo) {
-      insertPhoto(photo)
+    if (Array.isArray(photoData.rsp.photos.photo)) { // array of photos
+      photoData.rsp.photos.photo.forEach(function(photo) {
+        insertPhoto(photo)
+        newPhotos++
+      })
+    } else { // single photo
+      insertPhoto(photoData.rsp.photos.photo)
       newPhotos++
-    })
+    }
     console.log('Inserted ' + newPhotos + ' photos')
 
     // fetch next page
