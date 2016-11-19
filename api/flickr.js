@@ -7,7 +7,7 @@ var Photo = require('../models/Photo')
 // constants
 var ONE_MINUTE = 1 * 60 * 60
 var FIVE_SECONDS = 5000
-var INITIAL_PHOTO_FETCH_PAGE_SIZE = 5
+var INITIAL_PHOTO_FETCH_PAGE_SIZE = 500
 var PHOTO_FETCH_LOOP_PAGE_SIZE = 50
 
 // tracks whether we are fetching first photos
@@ -25,8 +25,6 @@ var generateVideoUrl = function(flickrId, secret) {
 
 // insert Photo into DB
 var insertPhoto = function(photo) {
-  console.log('inserting photo', photo)
-  // console.log('inserting photo with title:', photo.title)
   var photoRecord = new Photo({
     flickrId: photo.id,
     title: photo.title,
@@ -111,8 +109,6 @@ var fetchPage = function(pageSize, page) {
     totalPages = photoData.rsp.photos.pages || 1
     // print total pages if we're on first page
     if (page === 1) console.log('Total pages: ' + totalPages)
-
-    console.log(photoData.rsp.photos.photo)
 
     var newPhotos = 0
     // insert all photos

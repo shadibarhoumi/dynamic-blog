@@ -11,6 +11,7 @@ var photosRouter = express.Router()
 photosRouter.get('/byTag', function(req, res, next) {
   Photo.aggregate([
     { '$unwind': '$tags' },
+    { $sort: { 'dateTaken': -1 } },
     { '$group': {
       '_id': '$tags',
       'count': { '$sum': 1 },
@@ -36,6 +37,7 @@ photosRouter.get('/tags/:tag', function(req, res, next) {
 // DATES
 photosRouter.get('/byDate', function(req, res, next) {
   Photo.aggregate([
+    { $sort: { 'dateTaken': -1 } },
     { $group: {
         _id: '$dateStart',
         count: { '$sum': 1 },
