@@ -8831,7 +8831,7 @@
 	
 	var _routes2 = _interopRequireDefault(_routes);
 	
-	var _configureStore = __webpack_require__(690);
+	var _configureStore = __webpack_require__(696);
 	
 	var _configureStore2 = _interopRequireDefault(_configureStore);
 	
@@ -36031,13 +36031,21 @@
 	
 	var _Feed2 = _interopRequireDefault(_Feed);
 	
-	var _Tags = __webpack_require__(688);
+	var _Tags = __webpack_require__(692);
 	
 	var _Tags2 = _interopRequireDefault(_Tags);
 	
-	var _About = __webpack_require__(689);
+	var _About = __webpack_require__(693);
 	
 	var _About2 = _interopRequireDefault(_About);
+	
+	var _DayShow = __webpack_require__(694);
+	
+	var _DayShow2 = _interopRequireDefault(_DayShow);
+	
+	var _TagShow = __webpack_require__(695);
+	
+	var _TagShow2 = _interopRequireDefault(_TagShow);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -36047,7 +36055,9 @@
 	  _react2.default.createElement(_reactRouter.IndexRoute, { component: _Feed2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/feed', component: _Feed2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/tags', component: _Tags2.default }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '/about', component: _About2.default })
+	  _react2.default.createElement(_reactRouter.Route, { path: '/tags/:tag', component: _TagShow2.default }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/about', component: _About2.default }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/day/:dateString', component: _DayShow2.default })
 	);
 
 /***/ },
@@ -36234,13 +36244,15 @@
 	
 	var _moment2 = _interopRequireDefault(_moment);
 	
-	var _PhotoActions = __webpack_require__(655);
+	var _PhotoHelpers = __webpack_require__(655);
+	
+	var _PhotoActions = __webpack_require__(656);
 	
 	var PhotoActions = _interopRequireWildcard(_PhotoActions);
 	
-	var _PhotoBlock = __webpack_require__(674);
+	var _PhotoSection = __webpack_require__(675);
 	
-	var _PhotoBlock2 = _interopRequireDefault(_PhotoBlock);
+	var _PhotoSection2 = _interopRequireDefault(_PhotoSection);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -36264,16 +36276,18 @@
 	  _createClass(Feed, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
-	      this.props.fetchMostRecentPhotos();
+	      this.props.fetchPhotosByDate();
 	    }
 	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
-	      console.log('Feed Unmounting, reset data!');
+	      this.props.resetPhotos();
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+	
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -36282,19 +36296,13 @@
 	          null,
 	          'Feed'
 	        ),
-	        this.props.photosByDate.map(function (date) {
-	          return _react2.default.createElement(
-	            'div',
-	            { key: date._id },
-	            _react2.default.createElement(
-	              'h2',
-	              null,
-	              (0, _moment2.default)(date._id).format('dddd, MMMM Do')
-	            ),
-	            _react2.default.createElement(_PhotoBlock2.default, {
-	              photos: date.photos
-	            })
-	          );
+	        Object.keys(this.props.photosByDate).map(function (date) {
+	          var dateData = _this2.props.photosByDate[date];
+	          return _react2.default.createElement(_PhotoSection2.default, {
+	            key: date,
+	            header: _PhotoHelpers.dateFormatter.formatDate(date),
+	            photos: dateData.photos
+	          });
 	        })
 	      );
 	    }
@@ -36305,7 +36313,7 @@
 	
 	var mapStateToProps = function mapStateToProps(state) {
 	  return {
-	    photosByDate: state.get('photos')
+	    photosByDate: state.get('photosByDate')
 	  };
 	};
 	
@@ -46898,13 +46906,55 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.fetchTags = exports.fetchPhotosWithTag = exports.fetchPhotosWithDate = exports.fetchMostRecentPhotos = undefined;
+	exports.dateFormatter = exports.extractTags = exports.trimTitle = undefined;
 	
-	var _axios = __webpack_require__(656);
+	var _moment = __webpack_require__(549);
+	
+	var _moment2 = _interopRequireDefault(_moment);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var trimTitle = exports.trimTitle = function trimTitle(title) {
+	  return title.substr(0, title.indexOf('#')).trim();
+	};
+	
+	var extractTags = exports.extractTags = function extractTags(title) {
+	  var tags = title.match(/#[A-Za-z0-9]+/g);
+	  return tags === null ? [] : tags.map(function (tag) {
+	    return tag.substring(1);
+	  });
+	};
+	
+	var dateFormatter = exports.dateFormatter = {};
+	
+	dateFormatter.formatDate = function (date) {
+	  return (0, _moment2.default)(date).format('dddd, MMMM Do');
+	};
+	
+	dateFormatter.formatDateFromSlug = function (date) {
+	  return (0, _moment2.default)(date, 'MM-DD-YYYY').format('dddd, MMMM Do');
+	};
+	
+	dateFormatter.toISOString = function (date) {
+	  return (0, _moment2.default)(date).toISOString();
+	};
+
+/***/ },
+/* 656 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.resetPhotos = exports.fetchPhotosForTag = exports.fetchPhotosByTag = exports.fetchPhotosForDate = exports.fetchPhotosByDate = undefined;
+	
+	var _axios = __webpack_require__(657);
 	
 	var _axios2 = _interopRequireDefault(_axios);
 	
-	var _PhotoConstants = __webpack_require__(673);
+	var _PhotoConstants = __webpack_require__(674);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -46912,7 +46962,7 @@
 	
 	var ROOT_URL = location.href.indexOf('localhost') > 0 ? 'http://localhost:3000/api' : '/api';
 	
-	var fetchMostRecentPhotos = exports.fetchMostRecentPhotos = function fetchMostRecentPhotos() {
+	var fetchPhotosByDate = exports.fetchPhotosByDate = function fetchPhotosByDate() {
 	  return function () {
 	    var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(dispatch) {
 	      var response;
@@ -46923,7 +46973,7 @@
 	              _context.next = 2;
 	              return (0, _axios2.default)({
 	                method: 'get',
-	                url: ROOT_URL + '/photos/feed',
+	                url: ROOT_URL + '/photos/byDate',
 	                headers: []
 	              });
 	
@@ -46931,7 +46981,7 @@
 	              response = _context.sent;
 	
 	
-	              dispatch(setPhotos(response.data));
+	              dispatch(setPhotosByDate(response.data));
 	
 	            case 4:
 	            case 'end':
@@ -46947,7 +46997,7 @@
 	  }();
 	};
 	
-	var fetchPhotosWithDate = exports.fetchPhotosWithDate = function fetchPhotosWithDate(dateString) {
+	var fetchPhotosForDate = exports.fetchPhotosForDate = function fetchPhotosForDate(dateString) {
 	  return function () {
 	    var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(dispatch) {
 	      var response;
@@ -46982,24 +47032,95 @@
 	  }();
 	};
 	
-	var fetchPhotosWithTag = exports.fetchPhotosWithTag = function fetchPhotosWithTag(tagName) {
-	  var response = (0, _axios2.default)({
-	    method: 'get',
-	    url: ROOT_URL + '/tags/' + tagName,
-	    headers: []
-	  });
+	var fetchPhotosByTag = exports.fetchPhotosByTag = function fetchPhotosByTag() {
+	  return function () {
+	    var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(dispatch) {
+	      var response;
+	      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+	        while (1) {
+	          switch (_context3.prev = _context3.next) {
+	            case 0:
+	              _context3.next = 2;
+	              return (0, _axios2.default)({
+	                method: 'get',
+	                url: ROOT_URL + '/photos/byTag',
+	                headers: []
+	              });
 	
-	  dispatch(setPhotos(response.data));
+	            case 2:
+	              response = _context3.sent;
+	
+	
+	              dispatch(setPhotosByTag(response.data));
+	              dispatch(setTags(response.data));
+	
+	            case 5:
+	            case 'end':
+	              return _context3.stop();
+	          }
+	        }
+	      }, _callee3, undefined);
+	    }));
+	
+	    return function (_x3) {
+	      return _ref3.apply(this, arguments);
+	    };
+	  }();
 	};
 	
-	var fetchTags = exports.fetchTags = function fetchTags() {
-	  var response = (0, _axios2.default)({
-	    method: 'get',
-	    url: ROOT_URL + '/tags/',
-	    headers: []
-	  });
+	var fetchPhotosForTag = exports.fetchPhotosForTag = function fetchPhotosForTag(tag) {
+	  return function () {
+	    var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee4(dispatch) {
+	      var response;
+	      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+	        while (1) {
+	          switch (_context4.prev = _context4.next) {
+	            case 0:
+	              _context4.next = 2;
+	              return (0, _axios2.default)({
+	                method: 'get',
+	                url: ROOT_URL + '/photos/tags/' + tag,
+	                headers: []
+	              });
 	
-	  dispatch(setTags(response.data));
+	            case 2:
+	              response = _context4.sent;
+	
+	
+	              dispatch(setPhotos(response.data));
+	
+	            case 4:
+	            case 'end':
+	              return _context4.stop();
+	          }
+	        }
+	      }, _callee4, undefined);
+	    }));
+	
+	    return function (_x4) {
+	      return _ref4.apply(this, arguments);
+	    };
+	  }();
+	};
+	
+	var resetPhotos = exports.resetPhotos = function resetPhotos() {
+	  return {
+	    type: _PhotoConstants.types.RESET_PHOTOS
+	  };
+	};
+	
+	var setPhotosByTag = function setPhotosByTag(photosByTag) {
+	  return {
+	    type: _PhotoConstants.types.SET_PHOTOS_BY_TAG,
+	    photosByTag: photosByTag
+	  };
+	};
+	
+	var setPhotosByDate = function setPhotosByDate(photosByDate) {
+	  return {
+	    type: _PhotoConstants.types.SET_PHOTOS_BY_DATE,
+	    photosByDate: photosByDate
+	  };
 	};
 	
 	var setPhotos = function setPhotos(photos) {
@@ -47009,20 +47130,12 @@
 	  };
 	};
 	
-	var setTags = function setTags(tags) {
+	var setTags = function setTags(photosByTag) {
 	  return {
 	    type: _PhotoConstants.types.SET_TAGS,
-	    tags: tags
+	    photosByTag: photosByTag
 	  };
 	};
-
-/***/ },
-/* 656 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	module.exports = __webpack_require__(657);
 
 /***/ },
 /* 657 */
@@ -47030,14 +47143,22 @@
 
 	'use strict';
 	
-	var defaults = __webpack_require__(658);
-	var utils = __webpack_require__(659);
-	var dispatchRequest = __webpack_require__(660);
-	var InterceptorManager = __webpack_require__(668);
-	var isAbsoluteURL = __webpack_require__(669);
-	var combineURLs = __webpack_require__(670);
-	var bind = __webpack_require__(671);
-	var transformData = __webpack_require__(664);
+	module.exports = __webpack_require__(658);
+
+/***/ },
+/* 658 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var defaults = __webpack_require__(659);
+	var utils = __webpack_require__(660);
+	var dispatchRequest = __webpack_require__(661);
+	var InterceptorManager = __webpack_require__(669);
+	var isAbsoluteURL = __webpack_require__(670);
+	var combineURLs = __webpack_require__(671);
+	var bind = __webpack_require__(672);
+	var transformData = __webpack_require__(665);
 	
 	function Axios(defaultConfig) {
 	  this.defaults = utils.merge({}, defaultConfig);
@@ -47109,7 +47230,7 @@
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(672);
+	axios.spread = __webpack_require__(673);
 	
 	// Expose interceptors
 	axios.interceptors = defaultInstance.interceptors;
@@ -47139,12 +47260,12 @@
 	});
 
 /***/ },
-/* 658 */
+/* 659 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(659);
+	var utils = __webpack_require__(660);
 	
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -47207,7 +47328,7 @@
 	};
 
 /***/ },
-/* 659 */
+/* 660 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -47454,7 +47575,7 @@
 	};
 
 /***/ },
-/* 660 */
+/* 661 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -47477,10 +47598,10 @@
 	        adapter = config.adapter;
 	      } else if (typeof XMLHttpRequest !== 'undefined') {
 	        // For browsers use XHR adapter
-	        adapter = __webpack_require__(661);
+	        adapter = __webpack_require__(662);
 	      } else if (typeof process !== 'undefined') {
 	        // For node use HTTP adapter
-	        adapter = __webpack_require__(661);
+	        adapter = __webpack_require__(662);
 	      }
 	
 	      if (typeof adapter === 'function') {
@@ -47494,17 +47615,17 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(295)))
 
 /***/ },
-/* 661 */
+/* 662 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(659);
-	var buildURL = __webpack_require__(662);
-	var parseHeaders = __webpack_require__(663);
-	var transformData = __webpack_require__(664);
-	var isURLSameOrigin = __webpack_require__(665);
-	var btoa = window.btoa || __webpack_require__(666);
+	var utils = __webpack_require__(660);
+	var buildURL = __webpack_require__(663);
+	var parseHeaders = __webpack_require__(664);
+	var transformData = __webpack_require__(665);
+	var isURLSameOrigin = __webpack_require__(666);
+	var btoa = window.btoa || __webpack_require__(667);
 	
 	module.exports = function xhrAdapter(resolve, reject, config) {
 	  var requestData = config.data;
@@ -47572,7 +47693,7 @@
 	  // This is only done if running in a standard browser environment.
 	  // Specifically not if we're in a web worker, or react-native.
 	  if (utils.isStandardBrowserEnv()) {
-	    var cookies = __webpack_require__(667);
+	    var cookies = __webpack_require__(668);
 	
 	    // Add xsrf header
 	    var xsrfValue = config.withCredentials || isURLSameOrigin(config.url) ? cookies.read(config.xsrfCookieName) : undefined;
@@ -47620,12 +47741,12 @@
 	};
 
 /***/ },
-/* 662 */
+/* 663 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(659);
+	var utils = __webpack_require__(660);
 	
 	function encode(val) {
 	  return encodeURIComponent(val).replace(/%40/gi, '@').replace(/%3A/gi, ':').replace(/%24/g, '$').replace(/%2C/gi, ',').replace(/%20/g, '+').replace(/%5B/gi, '[').replace(/%5D/gi, ']');
@@ -47684,12 +47805,12 @@
 	};
 
 /***/ },
-/* 663 */
+/* 664 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(659);
+	var utils = __webpack_require__(660);
 	
 	/**
 	 * Parse headers into an object
@@ -47728,12 +47849,12 @@
 	};
 
 /***/ },
-/* 664 */
+/* 665 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(659);
+	var utils = __webpack_require__(660);
 	
 	/**
 	 * Transform the data for a request or a response
@@ -47753,12 +47874,12 @@
 	};
 
 /***/ },
-/* 665 */
+/* 666 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(659);
+	var utils = __webpack_require__(660);
 	
 	module.exports = utils.isStandardBrowserEnv() ?
 	
@@ -47821,7 +47942,7 @@
 	}();
 
 /***/ },
-/* 666 */
+/* 667 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -47861,12 +47982,12 @@
 	module.exports = btoa;
 
 /***/ },
-/* 667 */
+/* 668 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(659);
+	var utils = __webpack_require__(660);
 	
 	module.exports = utils.isStandardBrowserEnv() ?
 	
@@ -47919,12 +48040,12 @@
 	}();
 
 /***/ },
-/* 668 */
+/* 669 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(659);
+	var utils = __webpack_require__(660);
 	
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -47976,7 +48097,7 @@
 	module.exports = InterceptorManager;
 
 /***/ },
-/* 669 */
+/* 670 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -47997,7 +48118,7 @@
 	};
 
 /***/ },
-/* 670 */
+/* 671 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -48015,7 +48136,7 @@
 	};
 
 /***/ },
-/* 671 */
+/* 672 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -48031,7 +48152,7 @@
 	};
 
 /***/ },
-/* 672 */
+/* 673 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -48064,7 +48185,7 @@
 	};
 
 /***/ },
-/* 673 */
+/* 674 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -48079,14 +48200,99 @@
 	
 	defineConst('FETCH_PHOTOS');
 	defineConst('SET_PHOTOS');
+	defineConst('SET_PHOTOS_BY_DATE');
+	defineConst('SET_PHOTOS_BY_TAG');
+	defineConst('RESET_PHOTOS');
 	
-	defineConst('FETCH_TAGS');
 	defineConst('SET_TAGS');
 	
 	exports.types = types;
 
 /***/ },
-/* 674 */
+/* 675 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(300);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _PhotoBlock = __webpack_require__(676);
+	
+	var _PhotoBlock2 = _interopRequireDefault(_PhotoBlock);
+	
+	var _PhotoSection = __webpack_require__(690);
+	
+	var _PhotoSection2 = _interopRequireDefault(_PhotoSection);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var PhotoSection = function (_Component) {
+	  _inherits(PhotoSection, _Component);
+	
+	  function PhotoSection() {
+	    _classCallCheck(this, PhotoSection);
+	
+	    return _possibleConstructorReturn(this, (PhotoSection.__proto__ || Object.getPrototypeOf(PhotoSection)).apply(this, arguments));
+	  }
+	
+	  _createClass(PhotoSection, [{
+	    key: 'renderCount',
+	    value: function renderCount() {
+	      if (this.props.count) {
+	        return _react2.default.createElement(
+	          'span',
+	          { className: _PhotoSection2.default.count },
+	          ' ',
+	          this.props.count
+	        );
+	      } else {
+	        return null;
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            this.props.header
+	          ),
+	          this.renderCount()
+	        ),
+	        _react2.default.createElement(_PhotoBlock2.default, {
+	          photos: this.props.photos
+	        })
+	      );
+	    }
+	  }]);
+	
+	  return PhotoSection;
+	}(_react.Component);
+	
+	exports.default = PhotoSection;
+
+/***/ },
+/* 676 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48105,7 +48311,7 @@
 	
 	var _moment2 = _interopRequireDefault(_moment);
 	
-	var _PhotoBlockItem = __webpack_require__(675);
+	var _PhotoBlockItem = __webpack_require__(677);
 	
 	var _PhotoBlockItem2 = _interopRequireDefault(_PhotoBlockItem);
 	
@@ -48147,7 +48353,7 @@
 	exports.default = PhotoBlock;
 
 /***/ },
-/* 675 */
+/* 677 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48166,15 +48372,15 @@
 	
 	var _moment2 = _interopRequireDefault(_moment);
 	
-	var _Photo = __webpack_require__(676);
+	var _Photo = __webpack_require__(678);
 	
 	var _Photo2 = _interopRequireDefault(_Photo);
 	
-	var _Video = __webpack_require__(684);
+	var _Video = __webpack_require__(686);
 	
 	var _Video2 = _interopRequireDefault(_Video);
 	
-	var _Caption = __webpack_require__(677);
+	var _Caption = __webpack_require__(679);
 	
 	var _Caption2 = _interopRequireDefault(_Caption);
 	
@@ -48216,7 +48422,8 @@
 	        this.renderPhotoOrVideo(photo),
 	        _react2.default.createElement(_Caption2.default, {
 	          dateTaken: photo.dateTaken,
-	          title: photo.title
+	          title: photo.title,
+	          tags: photo.tags
 	        })
 	      );
 	    }
@@ -48228,7 +48435,7 @@
 	exports.default = PhotoBlockItem;
 
 /***/ },
-/* 676 */
+/* 678 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48247,7 +48454,7 @@
 	
 	var _moment2 = _interopRequireDefault(_moment);
 	
-	var _Caption = __webpack_require__(677);
+	var _Caption = __webpack_require__(679);
 	
 	var _Caption2 = _interopRequireDefault(_Caption);
 	
@@ -48291,7 +48498,7 @@
 	exports.default = Photo;
 
 /***/ },
-/* 677 */
+/* 679 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48310,11 +48517,15 @@
 	
 	var _moment2 = _interopRequireDefault(_moment);
 	
-	var _classnames = __webpack_require__(678);
+	var _classnames = __webpack_require__(680);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _Caption = __webpack_require__(680);
+	var _reactRouter = __webpack_require__(484);
+	
+	var _PhotoHelpers = __webpack_require__(655);
+	
+	var _Caption = __webpack_require__(682);
 	
 	var _Caption2 = _interopRequireDefault(_Caption);
 	
@@ -48338,12 +48549,13 @@
 	  _createClass(Caption, [{
 	    key: 'render',
 	    value: function render() {
+	      var dateSlug = (0, _moment2.default)(this.props.dateTaken).format('M-D-YY');
 	      return _react2.default.createElement(
 	        'div',
 	        null,
 	        _react2.default.createElement(
-	          'span',
-	          { className: (0, _classnames2.default)(_Caption2.default.dateTaken) },
+	          _reactRouter.Link,
+	          { to: '/day/' + dateSlug },
 	          (0, _moment2.default)(this.props.dateTaken).format('MMMM D')
 	        ),
 	        _react2.default.createElement(
@@ -48354,12 +48566,27 @@
 	        _react2.default.createElement(
 	          'span',
 	          { className: (0, _classnames2.default)(_Caption2.default.dateTaken) },
-	          (0, _moment2.default)(this.props.dateTaken).format('h:mm a')
+	          (0, _moment2.default)(this.props.dateTaken).format('h:mma')
 	        ),
 	        _react2.default.createElement(
 	          'span',
 	          { className: _Caption2.default.title },
-	          this.props.title
+	          (0, _PhotoHelpers.trimTitle)(this.props.title)
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          (0, _PhotoHelpers.extractTags)(this.props.title).map(function (tag) {
+	            return _react2.default.createElement(
+	              'span',
+	              { key: tag, className: _Caption2.default.tag },
+	              _react2.default.createElement(
+	                _reactRouter.Link,
+	                { to: '/tags/' + tag },
+	                '#' + tag
+	              )
+	            );
+	          })
 	        )
 	      );
 	    }
@@ -48371,7 +48598,7 @@
 	exports.default = Caption;
 
 /***/ },
-/* 678 */
+/* 680 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
@@ -48417,7 +48644,7 @@
 	
 		if (typeof module !== 'undefined' && module.exports) {
 			module.exports = classNames;
-		} else if ("function" === 'function' && _typeof(__webpack_require__(679)) === 'object' && __webpack_require__(679)) {
+		} else if ("function" === 'function' && _typeof(__webpack_require__(681)) === 'object' && __webpack_require__(681)) {
 			// register as 'classnames', consistent with npm package name
 			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
 				return classNames;
@@ -48428,7 +48655,7 @@
 	})();
 
 /***/ },
-/* 679 */
+/* 681 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -48436,16 +48663,16 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 680 */
+/* 682 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(681);
+	var content = __webpack_require__(683);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(683)(content, {});
+	var update = __webpack_require__(685)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -48462,25 +48689,26 @@
 	}
 
 /***/ },
-/* 681 */
+/* 683 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(682)();
+	exports = module.exports = __webpack_require__(684)();
 	// imports
 	
 	
 	// module
-	exports.push([module.id, ".Caption__dateTaken___7RfhE {\n  color: #90949c;\n}\n\n.Caption__separator___2ly29 {\n  padding: 0 3px;\n}\n\n.Caption__title___3IM1M {\n  padding-left: 5px;\n  font-weight: bold;\n}", ""]);
+	exports.push([module.id, ".Caption__dateTaken___7RfhE {\n  color: #90949c;\n}\n\n.Caption__separator___2ly29 {\n  padding: 0 3px;\n}\n\n.Caption__title___3IM1M {\n  padding-left: 5px;\n  font-weight: bold;\n}\n\n.Caption__tag___3yh8g {\n  padding-left: 5px;\n}", ""]);
 	
 	// exports
 	exports.locals = {
 		"dateTaken": "Caption__dateTaken___7RfhE",
 		"separator": "Caption__separator___2ly29",
-		"title": "Caption__title___3IM1M"
+		"title": "Caption__title___3IM1M",
+		"tag": "Caption__tag___3yh8g"
 	};
 
 /***/ },
-/* 682 */
+/* 684 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -48535,7 +48763,7 @@
 	};
 
 /***/ },
-/* 683 */
+/* 685 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -48787,7 +49015,7 @@
 
 
 /***/ },
-/* 684 */
+/* 686 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48806,15 +49034,15 @@
 	
 	var _moment2 = _interopRequireDefault(_moment);
 	
-	var _Caption = __webpack_require__(677);
+	var _Caption = __webpack_require__(679);
 	
 	var _Caption2 = _interopRequireDefault(_Caption);
 	
-	var _reactHtml5video = __webpack_require__(685);
+	var _reactHtml5video = __webpack_require__(687);
 	
 	var _reactHtml5video2 = _interopRequireDefault(_reactHtml5video);
 	
-	__webpack_require__(686);
+	__webpack_require__(688);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -48859,7 +49087,7 @@
 	exports.default = Video;
 
 /***/ },
-/* 685 */
+/* 687 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module) {'use strict';
@@ -51203,16 +51431,16 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(294)(module)))
 
 /***/ },
-/* 686 */
+/* 688 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(687);
+	var content = __webpack_require__(689);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(683)(content, {});
+	var update = __webpack_require__(685)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -51229,10 +51457,10 @@
 	}
 
 /***/ },
-/* 687 */
+/* 689 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(682)();
+	exports = module.exports = __webpack_require__(684)();
 	// imports
 	
 	
@@ -51243,7 +51471,49 @@
 
 
 /***/ },
-/* 688 */
+/* 690 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(691);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(685)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js?modules=1&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!./PhotoSection.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js?modules=1&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!./PhotoSection.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 691 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(684)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, ".PhotoSection__count___2Ldph {\n  font-weight: lighter;\n  color: #90949c;\n  font-size: 22px;\n}", ""]);
+	
+	// exports
+	exports.locals = {
+		"count": "PhotoSection__count___2Ldph"
+	};
+
+/***/ },
+/* 692 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51257,6 +51527,22 @@
 	var _react = __webpack_require__(300);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(457);
+	
+	var _redux = __webpack_require__(464);
+	
+	var _reactRouter = __webpack_require__(484);
+	
+	var _PhotoSection = __webpack_require__(675);
+	
+	var _PhotoSection2 = _interopRequireDefault(_PhotoSection);
+	
+	var _PhotoActions = __webpack_require__(656);
+	
+	var PhotoActions = _interopRequireWildcard(_PhotoActions);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -51276,12 +51562,56 @@
 	  }
 	
 	  _createClass(Tags, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      this.props.fetchPhotosByTag();
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+	
 	      return _react2.default.createElement(
-	        'h1',
+	        'div',
 	        null,
-	        'Tags'
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Tags'
+	        ),
+	        _react2.default.createElement(
+	          'ul',
+	          null,
+	          this.props.tags.map(function (tagData) {
+	            var tag = tagData.tag,
+	                count = tagData.count;
+	
+	            return _react2.default.createElement(
+	              'li',
+	              { key: tag },
+	              _react2.default.createElement(
+	                _reactRouter.Link,
+	                { to: '/tags/' + tag },
+	                '#' + tag
+	              ),
+	              _react2.default.createElement(
+	                'span',
+	                null,
+	                ' ',
+	                count
+	              )
+	            );
+	          })
+	        ),
+	        Object.keys(this.props.photosByTag).map(function (tag) {
+	          var tagData = _this2.props.photosByTag[tag];
+	          return _react2.default.createElement(_PhotoSection2.default, {
+	            key: tag,
+	            header: '#' + tag,
+	            count: tagData.count,
+	            photos: tagData.photos
+	          });
+	        })
 	      );
 	    }
 	  }]);
@@ -51289,10 +51619,21 @@
 	  return Tags;
 	}(_react.Component);
 	
-	exports.default = Tags;
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    photosByTag: state.get('photosByTag'),
+	    tags: state.get('tags')
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return (0, _redux.bindActionCreators)(PhotoActions, dispatch);
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Tags);
 
 /***/ },
-/* 689 */
+/* 693 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51341,20 +51682,231 @@
 	exports.default = About;
 
 /***/ },
-/* 690 */
+/* 694 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(300);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(457);
+	
+	var _redux = __webpack_require__(464);
+	
+	var _moment = __webpack_require__(549);
+	
+	var _moment2 = _interopRequireDefault(_moment);
+	
+	var _PhotoActions = __webpack_require__(656);
+	
+	var PhotoActions = _interopRequireWildcard(_PhotoActions);
+	
+	var _PhotoBlock = __webpack_require__(676);
+	
+	var _PhotoBlock2 = _interopRequireDefault(_PhotoBlock);
+	
+	var _PhotoHelpers = __webpack_require__(655);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var DayShow = function (_Component) {
+	  _inherits(DayShow, _Component);
+	
+	  function DayShow() {
+	    _classCallCheck(this, DayShow);
+	
+	    return _possibleConstructorReturn(this, (DayShow.__proto__ || Object.getPrototypeOf(DayShow)).apply(this, arguments));
+	  }
+	
+	  _createClass(DayShow, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      this.dateString = this.props.params.dateString;
+	      this.formattedDate = _PhotoHelpers.dateFormatter.formatDateFromSlug(this.dateString);
+	      this.props.fetchPhotosForDate(this.dateString);
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      if (nextProps.params.dateString !== this.props.params.dateString) {
+	        var nextDateString = nextProps.params.dateString;
+	        this.formattedDate = _PhotoHelpers.dateFormatter.formatDateFromSlug(nextDateString);
+	        this.props.fetchPhotosForDate(nextDateString);
+	      }
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.props.resetPhotos();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Photos taken on ',
+	          this.formattedDate
+	        ),
+	        _react2.default.createElement(_PhotoBlock2.default, {
+	          photos: this.props.photos
+	        })
+	      );
+	    }
+	  }]);
+	
+	  return DayShow;
+	}(_react.Component);
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    photos: state.get('photos')
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return (0, _redux.bindActionCreators)(PhotoActions, dispatch);
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(DayShow);
+
+/***/ },
+/* 695 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(300);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(457);
+	
+	var _redux = __webpack_require__(464);
+	
+	var _moment = __webpack_require__(549);
+	
+	var _moment2 = _interopRequireDefault(_moment);
+	
+	var _PhotoActions = __webpack_require__(656);
+	
+	var PhotoActions = _interopRequireWildcard(_PhotoActions);
+	
+	var _PhotoBlock = __webpack_require__(676);
+	
+	var _PhotoBlock2 = _interopRequireDefault(_PhotoBlock);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var TagShow = function (_Component) {
+	  _inherits(TagShow, _Component);
+	
+	  function TagShow() {
+	    _classCallCheck(this, TagShow);
+	
+	    return _possibleConstructorReturn(this, (TagShow.__proto__ || Object.getPrototypeOf(TagShow)).apply(this, arguments));
+	  }
+	
+	  _createClass(TagShow, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      this.fullTag = '#' + this.props.params.tag;
+	      this.props.fetchPhotosForTag(this.props.params.tag);
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      if (nextProps.params.tag !== this.props.params.tag) {
+	        this.props.fetchPhotosForTag(nextProps.params.tag);
+	        this.fullTag = '#' + nextProps.params.tag;
+	      }
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.props.resetPhotos();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          this.fullTag
+	        ),
+	        _react2.default.createElement(_PhotoBlock2.default, {
+	          photos: this.props.photos
+	        })
+	      );
+	    }
+	  }]);
+	
+	  return TagShow;
+	}(_react.Component);
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    photos: state.get('photos')
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return (0, _redux.bindActionCreators)(PhotoActions, dispatch);
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TagShow);
+
+/***/ },
+/* 696 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
 	if (process.env.NODE_ENV === 'production' || location && location.hostname !== 'localhost') {
-	  module.exports = __webpack_require__(691);
+	  module.exports = __webpack_require__(697);
 	} else {
-	  module.exports = __webpack_require__(696);
+	  module.exports = __webpack_require__(702);
 	}
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(295)))
 
 /***/ },
-/* 691 */
+/* 697 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51366,11 +51918,11 @@
 	
 	var _redux = __webpack_require__(464);
 	
-	var _rootReducer = __webpack_require__(692);
+	var _rootReducer = __webpack_require__(698);
 	
 	var _rootReducer2 = _interopRequireDefault(_rootReducer);
 	
-	var _reduxThunk = __webpack_require__(695);
+	var _reduxThunk = __webpack_require__(701);
 	
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 	
@@ -51386,7 +51938,7 @@
 	}
 
 /***/ },
-/* 692 */
+/* 698 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51397,15 +51949,17 @@
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _immutable = __webpack_require__(693);
+	var _immutable = __webpack_require__(699);
 	
-	var _photosReducer = __webpack_require__(694);
+	var _photosReducer = __webpack_require__(700);
 	
 	var _photosReducer2 = _interopRequireDefault(_photosReducer);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var initialState = (0, _immutable.Map)({
+	  photosByDate: {},
+	  photosByTag: {},
 	  photos: [],
 	  tags: []
 	});
@@ -51433,7 +51987,7 @@
 	exports.default = rootReducer;
 
 /***/ },
-/* 693 */
+/* 699 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};/**
@@ -51670,7 +52224,7 @@
 	}var Immutable={Iterable:Iterable,Seq:Seq,Collection:Collection,Map:Map,OrderedMap:OrderedMap,List:List,Stack:Stack,Set:Set,OrderedSet:OrderedSet,Record:Record,Range:Range,Repeat:Repeat,is:is,fromJS:fromJS};return Immutable;});
 
 /***/ },
-/* 694 */
+/* 700 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51679,7 +52233,7 @@
 	  value: true
 	});
 	
-	var _PhotoConstants = __webpack_require__(673);
+	var _PhotoConstants = __webpack_require__(674);
 	
 	var handlers = {};
 	
@@ -51687,14 +52241,48 @@
 	  return state.set('photos', action.photos);
 	};
 	
+	handlers[_PhotoConstants.types.SET_PHOTOS_BY_TAG] = function (state, action) {
+	  var photosByTag = {};
+	  action.photosByTag.forEach(function (tagData) {
+	    var tag = tagData._id;
+	    photosByTag[tag] = {
+	      count: tagData.count,
+	      photos: tagData.photos
+	    };
+	  });
+	  return state.set('photosByTag', photosByTag);
+	};
+	
+	handlers[_PhotoConstants.types.SET_PHOTOS_BY_DATE] = function (state, action) {
+	  var photosByDate = {};
+	  action.photosByDate.forEach(function (dateData) {
+	    var dateString = dateData._id;
+	    photosByDate[dateString] = {
+	      photos: dateData.photos
+	    };
+	  });
+	  return state.set('photosByDate', photosByDate);
+	};
+	
 	handlers[_PhotoConstants.types.SET_TAGS] = function (state, action) {
-	  return state.set('tags', action.tags);
+	  var tags = [];
+	  action.photosByTag.forEach(function (tagData) {
+	    return tags.push({
+	      tag: tagData._id,
+	      count: tagData.count
+	    });
+	  });
+	  return state.set('tags', tags);
+	};
+	
+	handlers[_PhotoConstants.types.RESET_PHOTOS] = function (state, action) {
+	  return state.set('photos', []);
 	};
 	
 	exports.default = handlers;
 
 /***/ },
-/* 695 */
+/* 701 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -51722,7 +52310,7 @@
 	exports['default'] = thunk;
 
 /***/ },
-/* 696 */
+/* 702 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51734,11 +52322,11 @@
 	
 	var _redux = __webpack_require__(464);
 	
-	var _rootReducer = __webpack_require__(692);
+	var _rootReducer = __webpack_require__(698);
 	
 	var _rootReducer2 = _interopRequireDefault(_rootReducer);
 	
-	var _reduxThunk = __webpack_require__(695);
+	var _reduxThunk = __webpack_require__(701);
 	
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 	

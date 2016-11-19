@@ -7,6 +7,7 @@ var photoSchema = mongoose.Schema({
   lastUpdate: Date,
   dateTaken: Date,
   dateStart: Date,
+  dateUpload: Date,
   media: String,
   tags: [String],
   url_m: String,

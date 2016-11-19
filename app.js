@@ -7,7 +7,6 @@ var bodyParser = require('body-parser')
 var mongoose = require('mongoose')
 var router = express.Router()
 var flickrApi = require('./api/flickr')
-var appConstants = require('./appConstants')
 
 //routes
 var photosRouter = require('./routes/photosRouter')
@@ -75,8 +74,7 @@ db.once('open', function() {
   console.log('DB connected!')
 })
 
-flickrApi.ingestDataIfNecessary()
-// pull in public Flickr data
-// setInterval(flickrApi.fetchPhotos, appConstants.FLICKR_FETCH_INTERVAL)
+// start photo fetching service
+flickrApi.startPhotoService()
 
 module.exports = app
