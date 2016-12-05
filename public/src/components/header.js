@@ -1,45 +1,46 @@
 import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
+import classnames from 'classnames'
 
+import styles from './Header.css'
 
 class Header extends Component {
-	render() {
-		return (
-      <nav className='navbar navbar-default navbar-static-top'>
-	      <div id='navbar' className='navbar-collapse collapse'>
+  constructor(props) {
+    super(props)
+  }
 
-          <div className='container'>
-            <ul className='nav  nav-pills navbar-left'>
-              <li style={{paddingRight: '10px'}} style={{color:'#337ab7',  fontSize: '17px'}}  role='presentation'>
-                <Link to='/'>
-                  Shadi Travels
-                </Link>
-              </li>
-            </ul>
+  renderLink(page) {
+    return <li className={styles.navItem}>
+      <Link
+        to={'/' + page}
+        className={classnames({
+          [styles.currentPage]: page === this.props.page
+        })}
+      >
+        {page}
+      </Link>
+    </li>
+  }
 
-            <ul className='nav  nav-pills navbar-right'>
-              <li style={{paddingRight: '10px'}} role='presentation'>
-                <Link style={{color:'#337ab7',  fontSize: '17px'}} to='/feed'>
-                  Feed
-                </Link>
-              </li>
-              <li style={{paddingRight: '10px'}} role='presentation'>
-                <Link style={{color:'#337ab7',  fontSize: '17px'}} to='/tags'>
-                  Tags
-                </Link>
-              </li>
-              <li style={{paddingRight: '10px'}} role='presentation'>
-                <Link style={{color:'#337ab7',  fontSize: '17px'}} to='/about'>
-                  About
-                </Link>
-              </li>
-            </ul>
-           </div>
+  render() {
+    return (
+      <header>
+        <nav className={styles.nav}>
+          <ul className={styles.navList}>
+            <li className={styles.navItem}>
+              <h1 className={styles.logo}>Shadi.io</h1>
+            </li>
 
-      		</div>
-		 </nav>
-		)
-	}
+            {this.renderLink('feed')}
+
+            {this.renderLink('tags')}
+
+            {this.renderLink('about')}
+          </ul>
+        </nav>
+     </header>
+    )
+  }
 }
 
 export default Header

@@ -16,16 +16,19 @@ class PhotoBlockItem extends Component {
     }
   }
 
+  renderCaption(photo) {
+    return <Caption
+      dateTaken={photo.dateTaken}
+      title={photo.sizes.medium.width + 'x' + photo.sizes.medium.height}
+      tags={photo.tags}
+    />
+  }
+
   render() {
     const { photo } = this.props
 
     return <div>
       {this.renderPhotoOrVideo(photo)}
-      <Caption
-        dateTaken={photo.dateTaken}
-        title={photo.title}
-        tags={photo.tags}
-      />
     </div>
   }
 }

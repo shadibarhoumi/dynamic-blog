@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
+import Header from '../components/Header'
 
 import { dateFormatter } from '../helpers/PhotoHelpers'
 
@@ -19,6 +20,7 @@ class Feed extends Component {
 
   render() {
     return <div>
+      <Header page='feed'/>
       <h1>Feed</h1>
       {Object.keys(this.props.photosByDate).map(date => {
         const dateData = this.props.photosByDate[date]

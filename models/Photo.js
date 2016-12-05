@@ -10,7 +10,18 @@ var photoSchema = mongoose.Schema({
   dateUpload: Date,
   media: String,
   tags: [String],
-  url_m: String,
+  sizes: {
+    medium: {
+      url: String,
+      width: Number,
+      height: Number,
+    },
+    large: {
+      url: String,
+      width: Number,
+      height: Number,
+    }
+  },
   secret: String,
   videoUrl: String,
 })

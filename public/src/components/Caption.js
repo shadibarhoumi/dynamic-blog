@@ -11,6 +11,9 @@ class Caption extends Component {
   render() {
     const dateSlug = moment(this.props.dateTaken).format('M-D-YY')
     return <div>
+      <span>
+        {this.props.dateTaken}
+      </span>
       <Link to={'/day/' + dateSlug}>
         {moment(this.props.dateTaken).format('MMMM D')}
       </Link>

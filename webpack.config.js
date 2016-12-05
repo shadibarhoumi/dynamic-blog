@@ -25,7 +25,7 @@ module.exports = {
         loader: 'style!css-loader?modules=1&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
       },
       {
-        test: /\.(svg|woff|ttf|eot|png|jpg|gif)(\?.*)?$/i,
+        test: /\.(svg|woff|ttf|eot|png|jpg|gif|otf)(\?.*)?$/i,
         loader: 'url-loader?limit=10000'
       }
     ]

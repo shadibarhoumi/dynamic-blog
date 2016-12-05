@@ -25,26 +25,63 @@ var generateVideoUrl = function(flickrId, secret) {
 
 // insert Photo into DB
 var insertPhoto = function(photo) {
-  var photoRecord = new Photo({
-    flickrId: photo.id,
-    title: photo.title,
-    description: typeof photo.description === 'object' ? '' : photo.description,
-    lastUpdate: moment(photo.lastupdate, 'x').toDate(),
-    dateTaken: moment(photo.datetaken).toDate(),
-    dateStart: moment(photo.datetaken).startOf('day').toDate(),
-    dateUpload: moment(photo.dateupload, 'x').toDate(),
-    media: photo.media,
-    tags: extractTags(photo.title),
-    flickrTags: photo.tags,
-    url_m: photo.url_m,
-    videoUrl: photo.media === 'video' ? generateVideoUrl(photo.id, photo.secret) : null
-  })
+  // get sizes of photo
+  getPhotoSizes(photo.id, function(data) {
+    // console.log('photo sizes', data.rsp.sizes.size)
 
-  photoRecord.save(function(err, photoRecord) {
-    if (err) {
-      console.log('Error while ingesting photos from Flickr:', err)
-      return
+    var sizeData = data.rsp.sizes.size
+    var mediumSizeData = sizeData[7]
+    var largeSizeData = sizeData[8]
+
+    var photoRecord = new Photo({
+      flickrId: photo.id,
+      title: photo.title,
+      description: typeof photo.description === 'object' ? '' : photo.description,
+      lastUpdate: moment(photo.lastupdate, 'x').toDate(),
+      dateTaken: moment(photo.datetaken).toDate(),
+      dateStart: moment(photo.datetaken).startOf('day').toDate(),
+      dateUpload: moment(photo.dateupload, 'x').toDate(),
+      media: photo.media,
+      tags: extractTags(photo.title),
+      flickrTags: photo.tags,
+      sizes: {
+        medium: {
+          url: mediumSizeData.source,
+          width: mediumSizeData.width,
+          height: mediumSizeData.height,
+        },
+        large: {
+          url: largeSizeData.source,
+          width: largeSizeData.width,
+          height: largeSizeData.height,
+        }
+      },
+      videoUrl: photo.media === 'video' ? generateVideoUrl(photo.id, photo.secret) : null
+    })
+
+    photoRecord.save(function(err, photoRecord) {
+      if (err) {
+        console.log('Error while ingesting photos from Flickr:', err)
+        return
+      }
+    })
+  })
+}
+
+// call flickr.photos.getSizes method
+var getPhotoSizes = function(photoId, callback) {
+  request.get({
+    url: 'https://api.flickr.com/services/rest/',
+    qs: {
+      method: 'flickr.photos.getSizes',
+      api_key: '47fc21b68eae73568eb03efbe8ebda67',
+      photo_id: photoId,
     }
+  },
+  function (error, response, body) {
+    if (body === undefined) return
+    var sizes = parser.toJson(body, { object: true })
+    callback(sizes)
   })
 }
 
@@ -67,11 +104,12 @@ var getPublicPhotos = function(perPage, page, callback) {
       extras: [
         'date_taken', 'last_update', 'geo',
         'tags', 'description', 'media',
-        'date_upload', 'url_m'
+        'date_upload', 'url_c',
       ].join(','),
     }
   },
   function (error, response, body) {
+    if (body === undefined) return
     var photoData = parser.toJson(body, { object: true })
     callback(photoData)
   })

@@ -46931,12 +46931,13 @@
 	  return (0, _moment2.default)(date).format('dddd, MMMM Do');
 	};
 	
-	dateFormatter.formatDateFromSlug = function (date) {
-	  return (0, _moment2.default)(date, 'MM-DD-YYYY').format('dddd, MMMM Do');
+	dateFormatter.formatDate = function (date) {
+	  // return moment(date).format('dddd, MMMM Do')
+	  return date;
 	};
 	
-	dateFormatter.toISOString = function (date) {
-	  return (0, _moment2.default)(date).toISOString();
+	dateFormatter.formatDateFromSlug = function (date) {
+	  return (0, _moment2.default)(date, 'MM-DD-YYYY').format('dddd, MMMM Do');
 	};
 
 /***/ },
@@ -48553,6 +48554,11 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          this.props.dateTaken
+	        ),
 	        _react2.default.createElement(
 	          _reactRouter.Link,
 	          { to: '/day/' + dateSlug },

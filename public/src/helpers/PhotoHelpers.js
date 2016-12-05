@@ -1,7 +1,12 @@
 import moment from 'moment'
 
 export const trimTitle = (title) => {
-  return title.substr(0, title.indexOf('#')).trim()
+  var hashtagIndex = title.indexOf('#')
+  if (hashtagIndex === -1) {
+    return title.trim()
+  } else {
+    return title.substr(0, hashtagIndex).trim()
+  }
 }
 
 export const extractTags = (title) => {
@@ -15,10 +20,10 @@ dateFormatter.formatDate = (date) => {
   return moment(date).format('dddd, MMMM Do')
 }
 
-dateFormatter.formatDateFromSlug = (date) => {
-  return moment(date, 'MM-DD-YYYY').format('dddd, MMMM Do')
+dateFormatter.formatDate = (date) => {
+  return moment(date).format('dddd, MMMM Do')
 }
 
-dateFormatter.toISOString = (date) => {
-  return moment(date).toISOString()
+dateFormatter.formatDateFromSlug = (date) => {
+  return moment(date, 'MM-DD-YYYY').format('dddd, MMMM Do')
 }

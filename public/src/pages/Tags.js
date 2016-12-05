@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Link } from 'react-router'
+import Header from '../components/Header'
 
 import PhotoSection from '../components/PhotoSection'
 import * as PhotoActions from '../actions/PhotoActions'
@@ -13,6 +14,7 @@ class Tags extends Component {
 
   render() {
     return <div>
+      <Header page='tags'/>
       <h1>Tags</h1>
       <ul>
         {this.props.tags.map(tagData => {

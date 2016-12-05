@@ -1,0 +1,20 @@
+@font-face {
+  font-family: Brandon;
+  src: url('../fonts/Brandon_reg.otf') format('opentype');
+}
+
+@font-face {
+  font-family: Brandon;
+  font-weight: bold;
+  src: url('../fonts/Brandon_bld.otf') format('opentype');
+}
+
+@font-face {
+  font-family: Brandon;
+  font-style: italic;
+  src: url('../fonts/Brandon_reg_it.otf') format('opentype');
+}
+
+body {
+  font-family: Brandon;
+}

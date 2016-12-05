@@ -1,0 +1,47 @@
+.logo {
+  margin: 0;
+  line-height: 1.2em;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-weight: bold;
+  font-style: normal;
+  font-size: 36px;
+  display: inline-block;
+}
+
+.nav {
+  letter-spacing: .06em;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 14px;
+}
+
+.navList {
+  list-style: none;
+  list-style-image: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}
+
+.navItem {
+  float: left;
+  margin-right: 30px;
+}
+
+.navItem a {
+  padding: 8px 0;
+  line-height: 28px;
+  color: #9c9c9c;
+  font-size: 14px;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.navItem a:hover {
+  color: #000;
+}
+
+.navItem a.currentPage {
+  color: #000;
+}
