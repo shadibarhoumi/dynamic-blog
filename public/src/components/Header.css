@@ -40,6 +40,7 @@
 
 .navItem a:hover {
   color: #000;
+  text-decoration: none;
 }
 
 .navItem a.currentPage {

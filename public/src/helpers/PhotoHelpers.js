@@ -16,14 +16,14 @@ export const extractTags = (title) => {
 
 export const dateFormatter = {}
 
-dateFormatter.formatDate = (date) => {
-  return moment(date).format('dddd, MMMM Do')
-}
+dateFormatter.formatDate = (date) =>
+  moment(date).format('dddd, MMMM Do')
 
-dateFormatter.formatDate = (date) => {
-  return moment(date).format('dddd, MMMM Do')
-}
+dateFormatter.formatDate = (date) =>
+  moment(date).format('dddd, MMMM Do')
 
-dateFormatter.formatDateFromSlug = (date) => {
-  return moment(date, 'MM-DD-YYYY').format('dddd, MMMM Do')
-}
+dateFormatter.formatDateFromSlug = (date) =>
+  moment(date, 'MM-DD-YYYY').format('dddd, MMMM Do')
+
+dateFormatter.formatPhotoDate = (date) =>
+  moment(date).format('dddd MMMM D') + ', ' + moment(date).format('h:mma')

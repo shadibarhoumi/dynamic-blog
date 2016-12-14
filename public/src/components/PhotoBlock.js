@@ -12,6 +12,7 @@ class PhotoBlock extends Component {
     super(props)
 
     this.PHOTO_SPACING = 8
+    this.MAX_HEIGHT = 700
     this.photoCount = 0
     this.photoGrid = []
     this.containerDimensions = {
@@ -32,18 +33,16 @@ class PhotoBlock extends Component {
 
     const photoGrid = []
 
-    const maxHeight = 800
-
     let rowWidthCounter = 0
     let rowIndex = 0
     let row = { rowWidth: 0, photos: [] }
 
-    // Step 1: Place photos of maxHeight into rows
+    // Step 1: Place photos of this.MAX_HEIGHT into rows
     this.props.photos.forEach((photo, photoIndex) => {
       const widthToHeightAspectRatio = photo.sizes.medium.width / photo.sizes.medium.height
 
-      const height = maxHeight
-      const width = maxHeight * widthToHeightAspectRatio
+      const height = this.MAX_HEIGHT
+      const width = this.MAX_HEIGHT * widthToHeightAspectRatio
 
       // if current row has exceeded container width
       if ((rowWidthCounter + (row.photos.length * this.PHOTO_SPACING)) > this.containerDimensions.width) {
@@ -58,7 +57,7 @@ class PhotoBlock extends Component {
       // add photo to current row
       const left = rowWidthCounter + (row.photos.length * this.PHOTO_SPACING)
       rowWidthCounter += width
-      const top = rowIndex * (maxHeight + this.PHOTO_SPACING)
+      const top = rowIndex * (this.MAX_HEIGHT + this.PHOTO_SPACING)
 
       row.photos.push({
         width,

@@ -5,18 +5,26 @@ import Photo from './Photo'
 import Video from './Video'
 import Caption from './Caption'
 
+import styles from './PhotoBlockItem.css'
+
 
 class PhotoBlockItem extends Component {
 
   renderPhotoOrVideo(photo) {
     if (photo.media === 'photo') {
       return <Photo
-        style={...this.props.style.width, ...this.props.style.height}
+        style={{
+          width: this.props.style.width,
+          height: this.props.style.height
+        }}
         photo={photo}
       />
     } else if (photo.media === 'video') {
       return <Video
-        style={...this.props.style.width, ...this.props.style.height}
+        style={{
+          width: this.props.style.width,
+          height: this.props.style.height
+        }}
         video={photo}
       />
     }
@@ -25,7 +33,7 @@ class PhotoBlockItem extends Component {
   renderCaption(photo) {
     return <Caption
       dateTaken={photo.dateTaken}
-      title={photo.sizes.medium.width + 'x' + photo.sizes.medium.height}
+      title={photo.title}
       tags={photo.tags}
     />
   }
@@ -33,8 +41,17 @@ class PhotoBlockItem extends Component {
   render() {
     const { photo } = this.props
 
-    return <div style={this.props.style}>
+    return <div
+      className={styles.mediaWrapper}
+      style= {{
+        ...this.props.style,
+        overflow: 'hidden',
+      }}
+    >
       {this.renderPhotoOrVideo(photo)}
+      <div className={styles.hoverWrapper}>
+        {this.renderCaption(photo)}
+      </div>
     </div>
   }
 }

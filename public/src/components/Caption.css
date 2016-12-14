@@ -1,16 +1,40 @@
-.dateTaken {
-  color: #90949c;
+.captionWrapper {
+  color: #fff;
+  font-size: 22px;
+  padding: 15px;
+  position: absolute;
+  bottom: 0;
 }
 
-.separator {
-  padding: 0 3px;
+.date {
+  padding-bottom: 12px;
+  font-size: 15px;
 }
 
 .title {
-  padding-left: 5px;
   font-weight: bold;
 }
 
 .tag {
   padding-left: 5px;
+}
+
+a {
+  color: #fff;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+p {
+  margin: 0;
+}
+
+.captionWrapper a {
+  text-decoration: none;
+}
+
+.captionWrapper a:hover {
+  text-decoration: underline;
 }
