@@ -22,7 +22,7 @@ module.exports = {
       {
         test: /\.css$/,
         exclude: /ReactHtml5Video\.css$/,
-        loader: 'style!css-loader?modules=1&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
+        loader: 'style!css-loader?modules=1&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!stylus-loader'
       },
       {
         test: /\.(svg|woff|ttf|eot|png|jpg|gif|otf)(\?.*)?$/i,

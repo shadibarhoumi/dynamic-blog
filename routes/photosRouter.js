@@ -7,6 +7,16 @@ var moment = require('moment')
 
 var photosRouter = express.Router()
 
+// FEED
+photosRouter.get('/feed', function(req, res, next) {
+  Photo
+  .find({})
+  .sort({ 'dateTaken': -1 })
+  .exec(function(err, result) {
+    res.json(result)
+  })
+})
+
 // TAGS
 photosRouter.get('/byTag', function(req, res, next) {
   Photo.aggregate([

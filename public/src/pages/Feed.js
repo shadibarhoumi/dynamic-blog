@@ -7,11 +7,11 @@ import Header from '../components/Header'
 import { dateFormatter } from '../helpers/PhotoHelpers'
 
 import * as PhotoActions from '../actions/PhotoActions'
-import PhotoSection from '../components/PhotoSection'
+import PhotoBlock from '../components/PhotoBlock'
 
 class Feed extends Component {
   componentWillMount() {
-    this.props.fetchPhotosByDate()
+    this.props.fetchPhotoFeed()
   }
 
   componentWillUnmount() {
@@ -22,21 +22,16 @@ class Feed extends Component {
     return <div>
       <Header page='feed'/>
       <h1>Feed</h1>
-      {Object.keys(this.props.photosByDate).map(date => {
-        const dateData = this.props.photosByDate[date]
-        return <PhotoSection
-          key={date}
-          header={dateFormatter.formatDate(date)}
-          photos={dateData.photos}
-        />
-      })}
+      <PhotoBlock
+        photos={this.props.photos}
+      />
     </div>
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    photosByDate: state.get('photosByDate')
+    photos: state.get('photos')
   }
 }
 

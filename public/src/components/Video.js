@@ -12,7 +12,9 @@ class Video extends Component {
     const { video } = this.props
     return <HTML5Video
         controls autoPlay loop muted
-        width='500'
+        style={this.props.style}
+        width={this.props.style.width}
+        height={this.props.style.height}
       >
         <source src={video.videoUrl} type='video/mp4' />
     </HTML5Video>

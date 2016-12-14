@@ -3,6 +3,16 @@ import { types } from '../constants/PhotoConstants'
 
 const ROOT_URL = location.href.indexOf('localhost') > 0 ? 'http://localhost:3000/api' : '/api'
 
+export const fetchPhotoFeed = () => async (dispatch) => {
+  const response = await axios({
+    method: 'get',
+    url: `${ROOT_URL}/photos/feed`,
+    headers: []
+  })
+
+  dispatch(setPhotos(response.data))
+}
+
 export const fetchPhotosByDate = () => async (dispatch) => {
   const response = await axios({
     method: 'get',

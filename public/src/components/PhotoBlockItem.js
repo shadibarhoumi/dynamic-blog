@@ -10,9 +10,9 @@ class PhotoBlockItem extends Component {
 
   renderPhotoOrVideo(photo) {
     if (photo.media === 'photo') {
-      return <Photo photo={photo} />
+      return <Photo style={this.props.style} photo={photo} />
     } else if (photo.media === 'video') {
-      return <Video video={photo} />
+      return <Video style={this.props.style} video={photo} />
     }
   }
 

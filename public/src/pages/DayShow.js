@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
+import Header from '../components/Header'
 
 import * as PhotoActions from '../actions/PhotoActions'
 import PhotoBlock from '../components/PhotoBlock'
@@ -29,6 +30,7 @@ class DayShow extends Component {
 
   render() {
     return <div>
+      <Header page='feed' />
       <h1>Photos taken on {this.formattedDate}</h1>
       <PhotoBlock
         photos={this.props.photos}

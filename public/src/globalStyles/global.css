@@ -18,3 +18,12 @@
 body {
   font-family: Brandon;
 }
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+a:hover {
+  color: #9c9c9c;
+}
