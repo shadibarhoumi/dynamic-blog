@@ -9,8 +9,8 @@ class Photo extends Component {
   render() {
     const { photo } = this.props
     return <img
-      src={photo.sizes.medium.url}
       style={this.props.style}
+      src={photo.sizes.medium.url}
     />
   }
 }

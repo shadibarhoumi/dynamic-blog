@@ -73,8 +73,6 @@ class PhotoBlock extends Component {
     row.rowWidth = rowWidthCounter
     photoGrid.push(row)
 
-    console.log('photoGrid before shrink', photoGrid)
-
     // Step 2: Shrink each row down to fit screen width
     photoGrid.forEach((row, rowIndex) => {
       const { rowWidth } = row
@@ -91,8 +89,6 @@ class PhotoBlock extends Component {
       row.rowWidth = rowWidthCounter
       row.rowHeight = row.photos[0].height
     })
-
-    console.log('photoGrid after shrink', photoGrid)
 
     this.photoGrid = photoGrid
   }

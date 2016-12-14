@@ -10,9 +10,15 @@ class PhotoBlockItem extends Component {
 
   renderPhotoOrVideo(photo) {
     if (photo.media === 'photo') {
-      return <Photo style={this.props.style} photo={photo} />
+      return <Photo
+        style={...this.props.style.width, ...this.props.style.height}
+        photo={photo}
+      />
     } else if (photo.media === 'video') {
-      return <Video style={this.props.style} video={photo} />
+      return <Video
+        style={...this.props.style.width, ...this.props.style.height}
+        video={photo}
+      />
     }
   }
 
@@ -27,7 +33,7 @@ class PhotoBlockItem extends Component {
   render() {
     const { photo } = this.props
 
-    return <div>
+    return <div style={this.props.style}>
       {this.renderPhotoOrVideo(photo)}
     </div>
   }
