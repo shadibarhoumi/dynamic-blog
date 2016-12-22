@@ -13,6 +13,7 @@ class PhotoBlockItem extends Component {
   renderPhotoOrVideo(photo) {
     if (photo.media === 'photo') {
       return <Photo
+        size='medium'
         style={{
           width: this.props.style.width,
           height: this.props.style.height
@@ -21,6 +22,7 @@ class PhotoBlockItem extends Component {
       />
     } else if (photo.media === 'video') {
       return <Video
+        size='medium'
         style={{
           width: this.props.style.width,
           height: this.props.style.height
@@ -43,6 +45,7 @@ class PhotoBlockItem extends Component {
 
     return <div
       className={styles.mediaWrapper}
+      onClick={() => this.props.showSlideshowAtIndex(this.props.photoIndex)}
       style= {{
         ...this.props.style,
         overflow: 'hidden',

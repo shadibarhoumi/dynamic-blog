@@ -1,0 +1,20 @@
+.tagList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 400px;
+}
+
+.tagList li {
+  display: inline-block;
+}
+
+.tagLink {
+  color: #000;
+  text-decoration: none;
+  list-style: none;
+}
+
+.tagLink:hover {
+  text-decoration: underline;
+}

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import moment from 'moment'
 import Measure from 'react-measure'
 import _ from 'underscore'
 
@@ -95,8 +94,6 @@ class PhotoBlock extends Component {
   renderPhotoGrid(containerDimensions) {
     if (!this.props.photos || this.props.photos.length === 0) return <div></div>
 
-    console.log('containerDimensions', containerDimensions)
-
     this.computePhotoPositions(containerDimensions)
 
     const photoBlockItems = []
@@ -119,12 +116,15 @@ class PhotoBlock extends Component {
     const lastPhotoStyle = photoStyles[photoStyles.length - 1]
     wrapperStyle.height = lastPhotoStyle.top + lastPhotoStyle.height
 
-    this.props.photos.forEach((photo, i) => {
+    this.props.photos.forEach((photo, photoIndex) => {
       photoBlockItems.push(
         <PhotoBlockItem
-          style={photoStyles[i]}
+          style={photoStyles[photoIndex]}
           key={photo._id}
           photo={photo}
+          photoIndex={photoIndex}
+
+          showSlideshowAtIndex={this.props.showSlideshowAtIndex}
         />
       )
     })

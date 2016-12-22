@@ -1,0 +1,20 @@
+.headingWrapper {
+  vertical-align: bottom;
+}
+
+.headingTitle {
+  margin: 0;
+  display: inline-block;
+}
+
+.filter {
+  margin-left: 10px;
+  color: #9c9c9c;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.filter:hover {
+  color: #000;
+  text-decoration: none;
+}

@@ -1,16 +1,27 @@
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 
-import photosReducer from './photosReducer'
+import PhotoReducer from './PhotoReducer'
+import UIPhotoReducer from './UIPhotoReducer'
 
 const initialState = Map({
   photosByDate: {},
   photosByTag: {},
   photos: [],
   tags: [],
+  slideshow: Map({
+    visible: false,
+    photoIndex: 0
+  }),
+  currentFilter: Map({
+    tags: List([]),
+    startDate: undefined,
+    endDate: undefined
+  })
 })
 
 const allReducer = {
-  ...photosReducer
+  ...PhotoReducer,
+  ...UIPhotoReducer
 }
 
 if (allReducer['undefined'] !== undefined) {

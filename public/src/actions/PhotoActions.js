@@ -44,6 +44,16 @@ export const fetchPhotosByTag = () => async (dispatch) => {
   dispatch(setTags(response.data))
 }
 
+export const fetchTags = () => async (dispatch) => {
+  const response = await axios({
+    method: 'get',
+    url: `${ROOT_URL}/photos/tags`,
+    headers: []
+  })
+
+  dispatch(setTags(response.data))
+}
+
 export const fetchPhotosForTag = (tag) => async (dispatch) => {
   const response = await axios({
     method: 'get',

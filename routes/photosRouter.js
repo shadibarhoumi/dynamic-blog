@@ -35,7 +35,24 @@ photosRouter.get('/byTag', function(req, res, next) {
   })
 })
 
+// TAGS
+photosRouter.get('/tags', function(req, res, next) {
+  console.log('all')
+  Photo.aggregate([
+    { '$unwind': '$tags' },
+    { $sort: { 'dateTaken': -1 } },
+    { '$group': {
+      '_id': '$tags',
+      'count': { '$sum': 1 },
+    }},
+    { '$sort': { 'count': -1 }}
+  ], function (err, result) {
+    res.json(result)
+  })
+})
+
 photosRouter.get('/tags/:tag', function(req, res, next) {
+  console.log('specific')
   Photo.find({
     tags: req.params.tag
   })
