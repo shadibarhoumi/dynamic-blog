@@ -28,14 +28,15 @@ class Header extends Component {
         <nav className={styles.nav}>
           <ul className={styles.navList}>
             <li className={styles.navItem}>
-              <h1 className={styles.logo}>Shadi.io</h1>
+              <h1 className={styles.logo}>Shadi's Photostream</h1>
             </li>
 
-            {this.renderLink('feed')}
+            {/*this.renderLink('feed')*/}
 
-            {this.renderLink('tags')}
+            {/*this.renderLink('tags')*/}
 
-            {this.renderLink('about')}
+            {/*this.renderLink('about')*/}
+
           </ul>
         </nav>
      </header>

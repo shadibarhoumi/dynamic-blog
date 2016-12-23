@@ -20,16 +20,7 @@ class PhotoBlock extends Component {
     }
   }
 
-  computePhotoPositions(containerDimensions) {
-    if (this.props.photos.length === 0) return
-    if (
-      !_.isEqual(this.containerDimensions, containerDimensions) ||
-      this.props.photos.length !== this.photoCount
-    ) {
-      this.containerDimensions = containerDimensions
-      this.photoCount = this.props.photos.length
-    }
-
+  createTrueGrid() {
     const photoGrid = []
 
     let rowWidthCounter = 0
@@ -88,7 +79,20 @@ class PhotoBlock extends Component {
       row.rowHeight = row.photos[0].height
     })
 
-    this.photoGrid = photoGrid
+    return photoGrid
+  }
+
+  computePhotoPositions(containerDimensions) {
+    if (this.props.photos.length === 0) return
+    if (
+      !_.isEqual(this.containerDimensions, containerDimensions) ||
+      this.props.photos.length !== this.photoCount
+    ) {
+      this.containerDimensions = containerDimensions
+      this.photoCount = this.props.photos.length
+    }
+
+    this.photoGrid = this.createTrueGrid()
   }
 
   renderPhotoGrid(containerDimensions) {

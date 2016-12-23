@@ -39,14 +39,14 @@ const Feed = React.createClass({
     return <div>
       <Header page='feed'/>
       <div className={styles.headingWrapper}>
-        <h1 className={styles.headingTitle}>Feed</h1>
+        {/*<h1 className={styles.headingTitle}>Photostream</h1>
         <a
           className={styles.filter}
           onClick={this.handleFilterLinkClick}
           href='#'
         >
           filter
-        </a>
+        </a>*/}
       </div>
       <Filter
         visible={this.state.filterVisible}

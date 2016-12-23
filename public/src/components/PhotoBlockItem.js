@@ -13,6 +13,7 @@ class PhotoBlockItem extends Component {
   renderPhotoOrVideo(photo) {
     if (photo.media === 'photo') {
       return <Photo
+        type='grid'
         size='medium'
         style={{
           width: this.props.style.width,
@@ -22,6 +23,7 @@ class PhotoBlockItem extends Component {
       />
     } else if (photo.media === 'video') {
       return <Video
+        type='grid'
         size='medium'
         style={{
           width: this.props.style.width,
@@ -34,6 +36,7 @@ class PhotoBlockItem extends Component {
 
   renderCaption(photo) {
     return <Caption
+      type='grid'
       dateTaken={photo.dateTaken}
       title={photo.title}
       tags={photo.tags}

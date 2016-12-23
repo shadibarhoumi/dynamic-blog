@@ -10,13 +10,30 @@ class Video extends Component {
 
   render() {
     const { video } = this.props
-    return <HTML5Video
+
+    if (this.props.type === 'slideshow') {
+      return <HTML5Video
+        className={this.props.className}
+        style={{
+          left: this.props.style.left,
+          top: this.props.style.top,
+        }}
+        width={this.props.style.width}
+        height={this.props.style.height}
+        controls
+      >
+        <source src={video.videoUrl} type='video/mp4' />
+      </HTML5Video>
+    } else if (this.props.type === 'grid') {
+      return <HTML5Video
+        className={this.props.className}
         width={this.props.style.width}
         height={this.props.style.height}
         autoPlay loop muted
       >
         <source src={video.videoUrl} type='video/mp4' />
-    </HTML5Video>
+      </HTML5Video>
+    }
   }
 }
 

@@ -19,6 +19,7 @@ class Photo extends Component {
     }
 
     return <img
+      className={this.props.className}
       style={this.props.style}
       src={url}
     />

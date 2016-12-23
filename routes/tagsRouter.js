@@ -4,10 +4,6 @@ var Photo = require('../models/Photo')
 var tagsRouter = express.Router()
 
 tagsRouter.get('/', function(req, res, next) {
-  // Photo.distinct('tags')
-  // .exec(function(err, tags) {
-  //   res.json(tags)
-  // })
 
   Photo.aggregate([
     { '$unwind': '$tags' },
