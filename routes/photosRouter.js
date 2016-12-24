@@ -51,7 +51,6 @@ photosRouter.get('/tags', function(req, res, next) {
 })
 
 photosRouter.get('/tags/:tag', function(req, res, next) {
-  console.log('specific')
   Photo.find({
     tags: req.params.tag
   })
